@@ -1,21 +1,21 @@
 package com.mahesh.smarthire.config;
 
 import com.mahesh.smarthire.security.JwtAuthenticationFilter;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.http.HttpMethod;
-
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -23,9 +23,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter) {
-
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
@@ -35,41 +33,71 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http) throws Exception {
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:5173")
+        );
+
+        configuration.setAllowedMethods(
+                List.of(
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "PATCH",
+                        "DELETE",
+                        "OPTIONS"
+                )
+        );
+
+        configuration.setAllowedHeaders(
+                List.of("*")
+        );
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration(
+                "/**",
+                configuration
+        );
+
+        return source;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
-
+                .cors(cors -> {})
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
                 )
-
                 .authorizeHttpRequests(auth -> auth
 
-                        // Authentication
                         .requestMatchers(
                                 "/api/auth/register",
                                 "/api/auth/login"
                         ).permitAll()
 
-                        // Swagger
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        // Public job viewing
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/jobs",
                                 "/api/jobs/**"
                         ).permitAll()
 
-                        // Recruiter job management
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/jobs"
@@ -90,31 +118,8 @@ public class SecurityConfig {
                                 "/api/jobs/**"
                         ).hasAuthority("ROLE_RECRUITER")
 
-                        // Candidate applications
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/applications"
-                        ).hasAuthority("ROLE_CANDIDATE")
-
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/applications/my"
-                        ).hasAuthority("ROLE_CANDIDATE")
-
-                        // Recruiter applications
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/applications/job/**"
-                        ).hasAuthority("ROLE_RECRUITER")
-
-                        .requestMatchers(
-                                HttpMethod.PATCH,
-                                "/api/applications/**"
-                        ).hasAuthority("ROLE_RECRUITER")
-
                         .anyRequest().authenticated()
                 )
-
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
