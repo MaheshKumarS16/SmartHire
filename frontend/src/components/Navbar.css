@@ -1,0 +1,578 @@
+/* =========================================================
+   SmartHire - Navbar
+   ========================================================= */
+
+.navbar {
+  position: relative;
+  z-index: 1000;
+
+  width: 100%;
+
+  background-color: #ffffff;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+
+/* =========================================================
+   Navbar Container
+   ========================================================= */
+
+.navbar-container {
+  width: 100%;
+  max-width: 1200px;
+
+  min-height: 70px;
+
+  margin: 0 auto;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 32px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   Brand
+   ========================================================= */
+
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+
+  color: #0f172a;
+
+  text-decoration: none;
+}
+
+.navbar-brand-icon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background-color: #2563eb;
+
+  color: #ffffff;
+
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.navbar-brand-name {
+  color: #0f172a;
+
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Desktop Navigation
+   ========================================================= */
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  flex: 1;
+}
+
+.navbar-link {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 42px;
+
+  padding: 0 13px;
+
+  border-radius: 8px;
+
+  color: #475569;
+
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.navbar-link:hover {
+  color: #2563eb;
+
+  background-color: #f8fafc;
+}
+
+.navbar-link-active {
+  color: #2563eb;
+
+  background-color: #eff6ff;
+}
+
+
+/* =========================================================
+   Desktop User Section
+   ========================================================= */
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+.navbar-user-avatar {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background-color: #dbeafe;
+
+  color: #2563eb;
+
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.navbar-user-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1px;
+
+  min-width: 0;
+}
+
+.navbar-user-info strong {
+  max-width: 150px;
+
+  overflow: hidden;
+
+  color: #0f172a;
+
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.navbar-user-info span {
+  color: #64748b;
+
+  font-size: 0.67rem;
+}
+
+.navbar-logout {
+  height: 40px;
+
+  margin-left: 5px;
+
+  padding: 0 15px;
+
+  border: none;
+  border-radius: 8px;
+
+  background-color: #e2e8f0;
+
+  color: #334155;
+
+  font-family: inherit;
+
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.navbar-logout:hover {
+  background-color: #cbd5e1;
+
+  color: #0f172a;
+}
+
+
+/* =========================================================
+   Logged-Out Desktop Login
+   ========================================================= */
+
+.navbar-guest-actions {
+  display: flex;
+  align-items: center;
+
+  margin-left: auto;
+}
+
+.navbar-login-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 40px;
+
+  padding: 0 15px;
+
+  border-radius: 8px;
+
+  color: #2563eb;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+.navbar-login-link:hover {
+  background-color: #eff6ff;
+}
+
+
+/* =========================================================
+   Mobile Menu Button
+   ========================================================= */
+
+.navbar-menu-button {
+  display: none;
+
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  margin-left: auto;
+
+  padding: 0;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+
+  background-color: #ffffff;
+
+  cursor: pointer;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.navbar-menu-button:hover {
+  background-color: #f8fafc;
+
+  border-color: #cbd5e1;
+}
+
+.navbar-menu-button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+
+  outline-offset: 2px;
+}
+
+.navbar-menu-button span {
+  display: block;
+
+  width: 19px;
+  height: 2px;
+
+  border-radius: 2px;
+
+  background-color: #334155;
+}
+
+
+/* =========================================================
+   Mobile Menu
+   ========================================================= */
+
+.navbar-mobile-menu {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 12px 20px 18px;
+
+  background-color: #ffffff;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+
+/* =========================================================
+   Mobile Links
+   ========================================================= */
+
+.navbar-mobile-links {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.navbar-mobile-link {
+  display: flex;
+  align-items: center;
+
+  min-height: 44px;
+
+  padding: 0 13px;
+
+  border-radius: 8px;
+
+  color: #475569;
+
+  font-size: 0.88rem;
+  font-weight: 500;
+
+  text-decoration: none;
+}
+
+.navbar-mobile-link:hover {
+  background-color: #f8fafc;
+
+  color: #2563eb;
+}
+
+.navbar-mobile-link-active {
+  background-color: #eff6ff;
+
+  color: #2563eb;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Mobile User
+   ========================================================= */
+
+.navbar-mobile-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-top: 12px;
+  padding-top: 14px;
+
+  border-top: 1px solid #e2e8f0;
+}
+
+.navbar-mobile-user-info {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+.navbar-mobile-user-info > div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1px;
+
+  min-width: 0;
+}
+
+.navbar-mobile-user-info strong {
+  color: #0f172a;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.navbar-mobile-user-info span {
+  color: #64748b;
+
+  font-size: 0.68rem;
+}
+
+.navbar-mobile-logout {
+  flex-shrink: 0;
+
+  height: 38px;
+
+  padding: 0 14px;
+
+  border: none;
+  border-radius: 8px;
+
+  background-color: #e2e8f0;
+
+  color: #334155;
+
+  font-family: inherit;
+
+  font-size: 0.76rem;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.navbar-mobile-logout:hover {
+  background-color: #cbd5e1;
+}
+
+
+/* =========================================================
+   Tablet
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .navbar-container {
+    min-height: 64px;
+
+    padding: 0 20px;
+
+    gap: 20px;
+  }
+
+  .navbar-links {
+    gap: 0;
+  }
+
+  .navbar-link {
+    padding: 0 9px;
+
+    font-size: 0.8rem;
+  }
+
+  .navbar-user-info {
+    display: none;
+  }
+
+  .navbar-logout {
+    margin-left: 0;
+  }
+
+}
+
+
+/* =========================================================
+   Tablet + Mobile
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .navbar-container {
+    min-height: 64px;
+
+    padding: 0 16px;
+
+    gap: 0;
+  }
+
+
+  /* Hide desktop navigation */
+
+  .navbar-links {
+    display: none;
+  }
+
+
+  /* Hide desktop user section */
+
+  .navbar-user {
+    display: none;
+  }
+
+
+  /* Hide desktop guest login */
+
+  .navbar-guest-actions {
+    display: none;
+  }
+
+
+  /* Show hamburger */
+
+  .navbar-menu-button {
+    display: flex !important;
+  }
+
+
+  /* Mobile menu is controlled by React */
+
+  .navbar-mobile-menu {
+    display: block;
+  }
+
+}
+
+
+/* =========================================================
+   Small Mobile
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .navbar-container {
+    padding: 0 14px;
+  }
+
+  .navbar-brand {
+    gap: 8px;
+  }
+
+  .navbar-brand-name {
+    font-size: 1rem;
+  }
+
+  .navbar-brand-icon {
+    width: 36px;
+    height: 36px;
+
+    font-size: 0.95rem;
+  }
+
+  .navbar-menu-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .navbar-mobile-menu {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+}
