@@ -12,7 +12,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     // Search by title
     List<Job> findByTitleContainingIgnoreCase(String title);
-
+    List<Job> findByRecruiterEmail(String email);
     // Search by location
     List<Job> findByLocationContainingIgnoreCase(String location);
 
@@ -52,4 +52,4 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             JobStatus status,
             Pageable pageable
     );
-}
+}       

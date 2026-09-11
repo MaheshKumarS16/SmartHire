@@ -5,9 +5,7 @@ import com.mahesh.smarthire.dto.JobRequest;
 import com.mahesh.smarthire.dto.JobResponse;
 import com.mahesh.smarthire.enums.JobStatus;
 import com.mahesh.smarthire.service.JobService;
-
 import jakarta.validation.Valid;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -25,20 +23,15 @@ public class JobController {
         this.jobService = jobService;
     }
 
-    // Create job
     @PostMapping
     public ApiResponse<JobResponse> createJob(
             @Valid @RequestBody JobRequest jobRequest,
             Authentication authentication) {
 
-        String recruiterEmail =
-                authentication.getName();
+        String recruiterEmail = authentication.getName();
 
         JobResponse jobResponse =
-                jobService.createJob(
-                        jobRequest,
-                        recruiterEmail
-                );
+                jobService.createJob(jobRequest, recruiterEmail);
 
         return new ApiResponse<>(
                 true,
@@ -47,7 +40,6 @@ public class JobController {
         );
     }
 
-    // Get all jobs
     @GetMapping
     public ApiResponse<List<JobResponse>> getAllJobs() {
 
@@ -61,7 +53,23 @@ public class JobController {
         );
     }
 
-    // Get job by ID
+    @GetMapping("/my")
+    public ApiResponse<List<JobResponse>> getMyJobs(
+            Authentication authentication) {
+
+        String recruiterEmail =
+                authentication.getName();
+
+        List<JobResponse> jobs =
+                jobService.getMyJobs(recruiterEmail);
+
+        return new ApiResponse<>(
+                true,
+                "Recruiter jobs fetched successfully",
+                jobs
+        );
+    }
+
     @GetMapping("/{id}")
     public ApiResponse<JobResponse> getJobById(
             @PathVariable Long id) {
@@ -76,7 +84,6 @@ public class JobController {
         );
     }
 
-    // Search jobs
     @GetMapping("/search")
     public Page<JobResponse> searchJobs(
             @RequestParam(required = false) String title,
@@ -92,7 +99,6 @@ public class JobController {
         );
     }
 
-    // Pagination
     @GetMapping("/page")
     public Page<JobResponse> getJobsWithPagination(
             Pageable pageable) {
@@ -102,7 +108,6 @@ public class JobController {
         );
     }
 
-    // Update job
     @PutMapping("/{id}")
     public ApiResponse<JobResponse> updateJob(
             @PathVariable Long id,
@@ -126,7 +131,6 @@ public class JobController {
         );
     }
 
-    // Update job status
     @PatchMapping("/{id}/status")
     public ApiResponse<JobResponse> updateJobStatus(
             @PathVariable Long id,
@@ -150,7 +154,6 @@ public class JobController {
         );
     }
 
-    // Delete job
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteJob(
             @PathVariable Long id,

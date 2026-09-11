@@ -225,4 +225,13 @@ public class JobService {
                 job.getStatus()
         );
     }
+    public List<JobResponse> getMyJobs(String recruiterEmail) {
+
+    List<Job> jobs =
+            jobRepository.findByRecruiterEmail(recruiterEmail);
+
+    return jobs.stream()
+            .map(this::convertToResponse)
+            .toList();
+}
 }
