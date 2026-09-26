@@ -1,4 +1,5 @@
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BASE_URL =
+  "https://smarthire-production-fa7c.up.railway.app/api";
 
 export async function apiRequest(
   endpoint,
@@ -11,13 +12,11 @@ export async function apiRequest(
   };
 
   if (options.body) {
-    headers["Content-Type"] =
-      "application/json";
+    headers["Content-Type"] = "application/json";
   }
 
   if (token) {
-    headers["Authorization"] =
-      `Bearer ${token}`;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(
