@@ -1,5 +1,5 @@
 const API_URL =
-  "http://localhost:8080/api/auth";
+  "https://smarthire-production-fa7c.up.railway.app/api/auth";
 
 export async function loginUser(
   email,
