@@ -13,6 +13,8 @@ public class ApplicationResponse {
     private Long jobId;
     private String jobTitle;
     private String company;
+    private String location;
+    private String salary;
 
     private ApplicationStatus status;
 
@@ -27,6 +29,8 @@ public class ApplicationResponse {
             Long jobId,
             String jobTitle,
             String company,
+            String location,
+            String salary,
             ApplicationStatus status) {
 
         this.id = id;
@@ -36,6 +40,8 @@ public class ApplicationResponse {
         this.jobId = jobId;
         this.jobTitle = jobTitle;
         this.company = company;
+        this.location = location;
+        this.salary = salary;
         this.status = status;
     }
 
@@ -93,6 +99,22 @@ public class ApplicationResponse {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getSalary() {
+        return salary;
+    }
+
+    public void setSalary(String salary) {
+        this.salary = salary;
     }
 
     public ApplicationStatus getStatus() {

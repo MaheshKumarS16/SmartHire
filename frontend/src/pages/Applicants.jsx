@@ -11,7 +11,6 @@ import ErrorMessage from "../components/ErrorMessage";
 
 import "./Applicants.css";
 
-
 function Applicants() {
   const { jobId } = useParams();
 
@@ -24,7 +23,6 @@ function Applicants() {
   const [error, setError] = useState("");
 
   const [updatingId, setUpdatingId] = useState(null);
-
 
   async function loadApplicants() {
     try {
@@ -41,11 +39,9 @@ function Applicants() {
     }
   }
 
-
   useEffect(() => {
     loadApplicants();
   }, [jobId]);
-
 
   async function handleStatusChange(applicationId, status) {
     try {
@@ -59,7 +55,6 @@ function Applicants() {
 
       const updatedApplication = response.data;
 
-
       setApplications((previousApplications) =>
         previousApplications.map((application) =>
           application.id === applicationId
@@ -67,7 +62,6 @@ function Applicants() {
             : application
         )
       );
-
     } catch (err) {
       setError(
         err.message || "Failed to update application status"
@@ -76,7 +70,6 @@ function Applicants() {
       setUpdatingId(null);
     }
   }
-
 
   function getStatusClass(status) {
     switch (status) {
@@ -97,7 +90,6 @@ function Applicants() {
     }
   }
 
-
   function formatStatus(status) {
     if (!status) {
       return "Unknown";
@@ -106,36 +98,24 @@ function Applicants() {
     return status.charAt(0) + status.slice(1).toLowerCase();
   }
 
-
   if (loading) {
     return (
       <main className="applicants-page page">
-
         <div className="container">
-
           <Loading message="Loading applicants..." />
-
         </div>
-
       </main>
     );
   }
 
-
   return (
     <main className="applicants-page page">
-
       <div className="container">
 
-
-        {/* =====================================================
-            Page Header
-        ===================================================== */}
+        {/* Page Header */}
 
         <section className="applicants-header">
-
           <div>
-
             <p className="applicants-eyebrow">
               RECRUITER
             </p>
@@ -147,9 +127,7 @@ function Applicants() {
             <p className="applicants-subtitle">
               Review candidates and manage their application status.
             </p>
-
           </div>
-
 
           <button
             type="button"
@@ -158,29 +136,20 @@ function Applicants() {
           >
             ← Back to My Jobs
           </button>
-
         </section>
 
-
-        {/* =====================================================
-            Error Message
-        ===================================================== */}
+        {/* Error Message */}
 
         <ErrorMessage
           message={error}
           onRetry={loadApplicants}
         />
 
-
-        {/* =====================================================
-            Summary
-        ===================================================== */}
+        {/* Summary */}
 
         {!error && (
           <section className="applicants-summary">
-
             <div className="applicants-summary-card">
-
               <span className="applicants-summary-number">
                 {applications.length}
               </span>
@@ -190,21 +159,14 @@ function Applicants() {
                   ? "Applicant"
                   : "Applicants"}
               </span>
-
             </div>
-
           </section>
         )}
 
-
-        {/* =====================================================
-            Empty State
-        ===================================================== */}
+        {/* Empty State */}
 
         {!error && applications.length === 0 && (
-
           <section className="applicants-empty">
-
             <div className="applicants-empty-icon">
               👤
             </div>
@@ -224,31 +186,21 @@ function Applicants() {
             >
               Back to My Jobs
             </button>
-
           </section>
-
         )}
 
-
-        {/* =====================================================
-            Applicants List
-        ===================================================== */}
+        {/* Applicants List */}
 
         {!error && applications.length > 0 && (
-
           <section className="applicants-list">
 
             {applications.map((application) => (
-
               <article
                 className="applicant-card"
                 key={application.id}
               >
 
-
-                {/* -------------------------------------------------
-                    Candidate Header
-                ------------------------------------------------- */}
+                {/* Candidate Header */}
 
                 <div className="applicant-card-header">
 
@@ -260,7 +212,6 @@ function Applicants() {
                       : "C"}
                   </div>
 
-
                   <div className="applicant-candidate-info">
 
                     <h2>
@@ -269,12 +220,11 @@ function Applicants() {
                     </h2>
 
                     <p>
-                      {application.email ||
+                      {application.candidateEmail ||
                         "No email available"}
                     </p>
 
                   </div>
-
 
                   <span className={getStatusClass(application.status)}>
                     {formatStatus(application.status)}
@@ -282,10 +232,7 @@ function Applicants() {
 
                 </div>
 
-
-                {/* -------------------------------------------------
-                    Application Information
-                ------------------------------------------------- */}
+                {/* Application Information */}
 
                 <div className="applicant-details">
 
@@ -302,7 +249,6 @@ function Applicants() {
 
                   </div>
 
-
                   <div className="applicant-detail">
 
                     <span className="applicant-detail-label">
@@ -315,7 +261,6 @@ function Applicants() {
                     </strong>
 
                   </div>
-
 
                   <div className="applicant-detail">
 
@@ -331,17 +276,13 @@ function Applicants() {
 
                 </div>
 
-
-                {/* -------------------------------------------------
-                    Status Actions
-                ------------------------------------------------- */}
+                {/* Status Actions */}
 
                 <div className="applicant-actions">
 
                   <span className="applicant-actions-label">
                     Update application status
                   </span>
-
 
                   <div className="applicant-status-buttons">
 
@@ -359,7 +300,6 @@ function Applicants() {
                       Shortlist
                     </button>
 
-
                     <button
                       type="button"
                       className="btn btn-outline applicant-status-button"
@@ -373,7 +313,6 @@ function Applicants() {
                     >
                       Reject
                     </button>
-
 
                     <button
                       type="button"
@@ -391,30 +330,23 @@ function Applicants() {
 
                   </div>
 
-
                   {updatingId === application.id && (
-
                     <span className="applicant-updating">
                       Updating status...
                     </span>
-
                   )}
 
                 </div>
 
               </article>
-
             ))}
 
           </section>
-
         )}
 
       </div>
-
     </main>
   );
 }
-
 
 export default Applicants;

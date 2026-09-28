@@ -16,10 +16,25 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     // Search by location
     List<Job> findByLocationContainingIgnoreCase(String location);
 
-    // Search by title + location
     List<Job> findByTitleContainingIgnoreCaseAndLocationContainingIgnoreCase(
             String title,
             String location
+    );
+
+    Page<Job> findByTitleContainingIgnoreCase(
+            String title,
+            Pageable pageable
+    );
+
+    Page<Job> findByLocationContainingIgnoreCase(
+            String location,
+            Pageable pageable
+    );
+
+    Page<Job> findByTitleContainingIgnoreCaseAndLocationContainingIgnoreCase(
+            String title,
+            String location,
+            Pageable pageable
     );
 
     // Filter by status

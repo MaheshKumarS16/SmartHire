@@ -4,11 +4,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
@@ -20,20 +20,34 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
-    // Create signing key from the Base64 secret
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        byte[] keyBytes = decodeSecret(secret);
+
+        if (keyBytes.length < 32) {
+            throw new IllegalStateException(
+                    "JWT_SECRET must be at least 32 characters. Update your environment configuration."
+            );
+        }
 
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Generate JWT token
+    private byte[] decodeSecret(String value) {
+        try {
+            byte[] decoded = Decoders.BASE64.decode(value);
+            if (decoded.length >= 32) {
+                return decoded;
+            }
+        } catch (Exception ignored) {
+            // Fall through and use the raw secret bytes.
+        }
+
+        return value.getBytes(StandardCharsets.UTF_8);
+    }
+
     public String generateToken(String email, String role) {
-
         Date issuedAt = new Date();
-
-        Date expirationDate =
-                new Date(issuedAt.getTime() + jwtExpiration);
+        Date expirationDate = new Date(issuedAt.getTime() + jwtExpiration);
 
         return Jwts.builder()
                 .subject(email)
@@ -44,43 +58,28 @@ public class JwtService {
                 .compact();
     }
 
-    // Extract email from JWT
     public String extractEmail(String token) {
-
-        Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
-        return claims.getSubject();
+        return parseClaims(token).getSubject();
     }
 
-    // Validate JWT
     public boolean isTokenValid(String token, String email) {
-
         try {
-
             String tokenEmail = extractEmail(token);
-
-            return tokenEmail.equals(email)
-                    && !isTokenExpired(token);
-
+            return tokenEmail.equals(email) && !isTokenExpired(token);
         } catch (Exception exception) {
-
             return false;
         }
     }
 
-    // Check token expiration
     private boolean isTokenExpired(String token) {
+        return parseClaims(token).getExpiration().before(new Date());
+    }
 
-        Claims claims = Jwts.parser()
+    private Claims parseClaims(String token) {
+        return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
-        return claims.getExpiration().before(new Date());
     }
 }

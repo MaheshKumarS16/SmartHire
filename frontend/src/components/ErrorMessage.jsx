@@ -1,18 +1,15 @@
-function ErrorMessage({
-  message,
-  onRetry
-}) {
+function ErrorMessage({ message, onRetry }) {
   if (!message) {
     return null;
   }
 
   return (
-    <div>
+    <div className="error-container" role="alert">
       <p>{message}</p>
 
       {onRetry && (
-        <button onClick={onRetry}>
-          Try Again
+        <button type="button" className="btn btn-secondary" onClick={onRetry}>
+          Try again
         </button>
       )}
     </div>

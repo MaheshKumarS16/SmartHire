@@ -1,12 +1,10 @@
 import { createContext, useContext, useState } from "react";
-import { loginUser } from "../services/authService";
+import { loginUser, registerUser } from "../services/authService";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(
-    localStorage.getItem("token")
-  );
+  const [token, setToken] = useState(localStorage.getItem("token"));
 
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
@@ -23,41 +21,31 @@ export function AuthProvider({ children }) {
     return null;
   });
 
-  const login = async (email, password) => {
-    const data = await loginUser(
-      email,
-      password
-    );
-
-    const newToken = data.data.token;
-    const newUser = data.data.user;
-
-    localStorage.setItem(
-      "token",
-      newToken
-    );
-
-    localStorage.setItem(
-      "user",
-      JSON.stringify(newUser)
-    );
-
+  function persistSession(newToken, newUser) {
+    localStorage.setItem("token", newToken);
+    localStorage.setItem("user", JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
+  }
 
-    return newUser;
+  const login = async (email, password) => {
+    const data = await loginUser(email, password);
+    persistSession(data.data.token, data.data.user);
+    return data.data.user;
+  };
+
+  const register = async (payload) => {
+    return registerUser(payload);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-
     setToken(null);
     setUser(null);
   };
 
-  const isAuthenticated =
-    Boolean(token && user);
+  const isAuthenticated = Boolean(token && user);
 
   return (
     <AuthContext.Provider
@@ -66,7 +54,8 @@ export function AuthProvider({ children }) {
         user,
         isAuthenticated,
         login,
-        logout
+        register,
+        logout,
       }}
     >
       {children}

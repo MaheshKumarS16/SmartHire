@@ -1,6 +1,7 @@
 function Loading({ message = "Loading..." }) {
   return (
-    <div>
+    <div className="loading-container" role="status">
+      <div className="loading-spinner" aria-hidden="true"></div>
       <p>{message}</p>
     </div>
   );

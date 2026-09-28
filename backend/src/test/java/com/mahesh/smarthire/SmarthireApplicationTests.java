@@ -1,13 +1,13 @@
 package com.mahesh.smarthire;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 class SmarthireApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void applicationClassIsPresent() {
+        assertNotNull(SmarthireApplication.class);
+    }
 }

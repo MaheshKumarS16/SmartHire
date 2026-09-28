@@ -3,7 +3,9 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Jobs from "./pages/Jobs";
 import JobDetails from "./pages/JobDetails";
@@ -15,42 +17,17 @@ import EditJob from "./pages/EditJob";
 import Applicants from "./pages/Applicants";
 import NotFound from "./pages/NotFound";
 
-import { useAuth } from "./context/AuthContext";
-
-
 function AppContent() {
-  const { isAuthenticated } = useAuth();
-
   return (
-    <>
-      {isAuthenticated && <Navbar />}
+    <div className="app-shell">
+      <Navbar />
 
       <Routes>
-
-        {/* Public Routes */}
-
-        <Route
-          path="/"
-          element={<Navigate to="/login" replace />}
-        />
-
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-        <Route
-          path="/jobs"
-          element={<Jobs />}
-        />
-
-        <Route
-          path="/jobs/:id"
-          element={<JobDetails />}
-        />
-
-
-        {/* Candidate Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/jobs/:id" element={<JobDetails />} />
 
         <Route
           path="/dashboard"
@@ -69,9 +46,6 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-
-
-        {/* Recruiter Routes */}
 
         <Route
           path="/recruiter-dashboard"
@@ -118,19 +92,12 @@ function AppContent() {
           }
         />
 
-
-        {/* 404 */}
-
-        <Route
-          path="*"
-          element={<NotFound />}
-        />
-
+        <Route path="/home" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-    </>
+    </div>
   );
 }
-
 
 function App() {
   return (
@@ -139,6 +106,5 @@ function App() {
     </BrowserRouter>
   );
 }
-
 
 export default App;

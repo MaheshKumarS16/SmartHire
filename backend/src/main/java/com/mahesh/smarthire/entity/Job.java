@@ -2,6 +2,7 @@ package com.mahesh.smarthire.entity;
 
 import com.mahesh.smarthire.enums.JobStatus;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,6 +35,7 @@ public class Job {
     private String salary;
 
     @NotBlank(message = "Job description is required")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(EnumType.STRING)

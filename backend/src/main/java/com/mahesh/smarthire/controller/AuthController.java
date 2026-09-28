@@ -6,9 +6,9 @@ import com.mahesh.smarthire.dto.LoginResponse;
 import com.mahesh.smarthire.dto.RegisterRequest;
 import com.mahesh.smarthire.dto.UserResponse;
 import com.mahesh.smarthire.service.UserService;
-
 import jakarta.validation.Valid;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,47 +23,39 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ApiResponse<UserResponse> registerUser(
+    public ResponseEntity<ApiResponse<UserResponse>> registerUser(
             @Valid @RequestBody RegisterRequest registerRequest) {
 
-        UserResponse userResponse =
-                userService.registerUser(registerRequest);
+        UserResponse userResponse = userService.registerUser(registerRequest);
 
-        return new ApiResponse<>(
-                true,
-                "User registered successfully",
-                userResponse
-        );
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(
+                        true,
+                        "User registered successfully",
+                        userResponse
+                ));
     }
 
     @PostMapping("/login")
     public ApiResponse<LoginResponse> loginUser(
             @Valid @RequestBody LoginRequest loginRequest) {
 
-        LoginResponse loginResponse =
-                userService.loginUser(loginRequest);
-
         return new ApiResponse<>(
                 true,
                 "Login successful",
-                loginResponse
+                userService.loginUser(loginRequest)
         );
     }
 
-    // Get currently logged-in user
     @GetMapping("/me")
     public ApiResponse<UserResponse> getCurrentUser(
             Authentication authentication) {
 
-        String email = authentication.getName();
-
-        UserResponse userResponse =
-                userService.getCurrentUser(email);
-
         return new ApiResponse<>(
                 true,
                 "Current user fetched successfully",
-                userResponse
+                userService.getCurrentUser(authentication.getName())
         );
     }
 }

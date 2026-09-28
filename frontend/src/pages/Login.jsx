@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Login.css";
 
@@ -7,210 +7,182 @@ function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [errors, setErrors] = useState({});
-  const [loginError, setLoginError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-
-    setFormData((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
-
-    setErrors((previous) => ({
-      ...previous,
-      [name]: "",
-    }));
-
-    setLoginError("");
-  }
-
-  function validateForm() {
-    const newErrors = {};
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required.";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address.";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required.";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
-    }
-
-    return newErrors;
-  }
-
-  async function handleSubmit(event) {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    setLoginError("");
+    setError("");
 
-    const validationErrors = validateForm();
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    if (!email.trim() || !password) {
+      setError("Please enter your email and password.");
       return;
     }
 
-    setErrors({});
-    setIsLoading(true);
-
     try {
-      const loggedInUser = await login(
-        formData.email.trim(),
-        formData.password
-      );
+      setLoading(true);
 
-      if (loggedInUser.role === "RECRUITER") {
+      const user = await login(email.trim(), password);
+
+      if (user?.role === "RECRUITER") {
         navigate("/recruiter-dashboard");
       } else {
         navigate("/dashboard");
       }
-    } catch (error) {
-      setLoginError(error.message || "Invalid email or password.");
+    } catch (err) {
+      setError(err.message || "Invalid email or password.");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <main className="login-page">
       <div className="login-container">
 
-        {/* Left Section */}
-        <section className="login-intro">
+        <section className="login-card">
+
           <div className="login-brand">
-            <div className="brand-icon login-brand-icon">S</div>
-            <span>SmartHire</span>
+            <div className="login-logo">S</div>
+
+            <div>
+              <h1>SmartHire</h1>
+              <p>Recruitment Management System</p>
+            </div>
           </div>
 
-          <div className="login-intro-content">
-            <h1>Build your next career move.</h1>
+          <div className="login-header">
+            <p className="login-eyebrow">Welcome back</p>
+
+            <h2>Sign in to your account</h2>
 
             <p>
-              Connect talented candidates with great opportunities
-              through a simple and smart recruitment platform.
+              Access your dashboard and continue your hiring journey.
             </p>
-
-            <div className="login-features">
-              <div className="login-feature">
-                <span className="feature-icon">✓</span>
-                <span>Discover relevant job opportunities</span>
-              </div>
-
-              <div className="login-feature">
-                <span className="feature-icon">✓</span>
-                <span>Track your applications easily</span>
-              </div>
-
-              <div className="login-feature">
-                <span className="feature-icon">✓</span>
-                <span>Manage recruitment efficiently</span>
-              </div>
-            </div>
           </div>
-        </section>
 
-        {/* Right Section */}
-        <section className="login-form-section">
-          <div className="login-card">
+          {error && (
+            <div className="login-error" role="alert">
+              <span className="error-icon">!</span>
+              <span>{error}</span>
+            </div>
+          )}
 
-            <div className="login-header">
-              <h2>Welcome back</h2>
+          <form onSubmit={handleSubmit} className="login-form">
 
-              <p>
-                Sign in to continue to your SmartHire account.
-              </p>
+            <div className="form-group">
+              <label htmlFor="email">
+                Email Address
+              </label>
+
+              <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                autoComplete="email"
+                disabled={loading}
+              />
             </div>
 
-            {loginError && (
-              <div className="message message-error">
-                {loginError}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} noValidate>
-
-              {/* Email */}
-              <div className="form-group">
-                <label htmlFor="email" className="form-label">
-                  Email Address
-                </label>
-
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  className={`form-input ${
-                    errors.email ? "form-input-error" : ""
-                  }`}
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  autoComplete="email"
-                />
-
-                {errors.email && (
-                  <span className="form-error">
-                    {errors.email}
-                  </span>
-                )}
-              </div>
-
-              {/* Password */}
-              <div className="form-group">
-                <label htmlFor="password" className="form-label">
+            <div className="form-group">
+              <div className="password-label-row">
+                <label htmlFor="password">
                   Password
                 </label>
-
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  className={`form-input ${
-                    errors.password ? "form-input-error" : ""
-                  }`}
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  autoComplete="current-password"
-                />
-
-                {errors.password && (
-                  <span className="form-error">
-                    {errors.password}
-                  </span>
-                )}
               </div>
 
-              {/* Submit */}
-              <button
-                type="submit"
-                className="btn btn-primary login-submit"
-                disabled={isLoading}
-              >
-                {isLoading ? "Signing in..." : "Sign In"}
-              </button>
+              <input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                autoComplete="current-password"
+                disabled={loading}
+              />
+            </div>
 
-            </form>
+            <button
+              type="submit"
+              className="login-button"
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </button>
+          </form>
 
-            <div className="login-footer">
-              <p>
-                SmartHire Recruitment Management System
-              </p>
+          <div className="login-divider">
+            <span>New to SmartHire?</span>
+          </div>
+
+          <div className="register-prompt">
+            <p>
+              Don't have an account?
+            </p>
+
+            <Link
+              to="/register"
+              className="register-link"
+            >
+              Create an account
+            </Link>
+          </div>
+
+          <div className="login-footer">
+            <Link to="/">
+              ← Back to SmartHire
+            </Link>
+          </div>
+
+        </section>
+
+        <section className="login-side">
+
+          <div className="side-content">
+
+            <span className="side-badge">
+              SMART RECRUITMENT
+            </span>
+
+            <h2>
+              Find opportunities.
+              <br />
+              Build careers.
+            </h2>
+
+            <p>
+              SmartHire connects talented candidates with
+              the right opportunities while helping recruiters
+              manage the hiring process efficiently.
+            </p>
+
+            <div className="side-features">
+
+              <div className="side-feature">
+                <span>✓</span>
+                <div>
+                  <strong>For Candidates</strong>
+                  <p>Discover and apply for opportunities.</p>
+                </div>
+              </div>
+
+              <div className="side-feature">
+                <span>✓</span>
+                <div>
+                  <strong>For Recruiters</strong>
+                  <p>Manage jobs and applicants in one place.</p>
+                </div>
+              </div>
+
             </div>
 
           </div>
+
         </section>
 
       </div>

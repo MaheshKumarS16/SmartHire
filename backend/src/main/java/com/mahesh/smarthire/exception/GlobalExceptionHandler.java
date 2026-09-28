@@ -1,12 +1,17 @@
 package com.mahesh.smarthire.exception;
 
 import com.mahesh.smarthire.dto.ApiResponse;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,88 +19,72 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // JOB NOT FOUND
+    private static final Logger log =
+            LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(JobNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiResponse<Void> handleJobNotFound(
+    public ResponseEntity<ApiResponse<Void>> handleJobNotFound(
             JobNotFoundException exception) {
 
-        return new ApiResponse<>(
-                false,
-                exception.getMessage(),
-                null
-        );
+        return error(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
-    // APPLICATION NOT FOUND
     @ExceptionHandler(ApplicationNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiResponse<Void> handleApplicationNotFound(
+    public ResponseEntity<ApiResponse<Void>> handleApplicationNotFound(
             ApplicationNotFoundException exception) {
 
-        return new ApiResponse<>(
-                false,
-                exception.getMessage(),
-                null
-        );
+        return error(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
-    // EMAIL ALREADY EXISTS
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUserNotFound(
+            UserNotFoundException exception) {
+
+        return error(HttpStatus.NOT_FOUND, exception.getMessage());
+    }
+
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiResponse<Void> handleEmailAlreadyExists(
+    public ResponseEntity<ApiResponse<Void>> handleEmailAlreadyExists(
             EmailAlreadyExistsException exception) {
 
-        return new ApiResponse<>(
-                false,
-                exception.getMessage(),
-                null
-        );
+        return error(HttpStatus.CONFLICT, exception.getMessage());
     }
 
-    // INVALID LOGIN CREDENTIALS
     @ExceptionHandler(InvalidCredentialsException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ApiResponse<Void> handleInvalidCredentials(
+    public ResponseEntity<ApiResponse<Void>> handleInvalidCredentials(
             InvalidCredentialsException exception) {
 
-        return new ApiResponse<>(
-                false,
-                exception.getMessage(),
-                null
-        );
+        return error(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
 
-    // DUPLICATE APPLICATION
     @ExceptionHandler(DuplicateApplicationException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiResponse<Void> handleDuplicateApplication(
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateApplication(
             DuplicateApplicationException exception) {
 
-        return new ApiResponse<>(
-                false,
-                exception.getMessage(),
-                null
-        );
+        return error(HttpStatus.CONFLICT, exception.getMessage());
     }
 
-    // CLOSED JOB
     @ExceptionHandler(JobClosedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<Void> handleJobClosed(
+    public ResponseEntity<ApiResponse<Void>> handleJobClosed(
             JobClosedException exception) {
 
-        return new ApiResponse<>(
-                false,
-                exception.getMessage(),
-                null
+        return error(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(
+            AccessDeniedException exception) {
+
+        return error(
+                HttpStatus.FORBIDDEN,
+                exception.getMessage() != null
+                        ? exception.getMessage()
+                        : "You are not authorized to access this resource"
         );
     }
 
-    // VALIDATION ERRORS
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<Map<String, String>> handleValidationErrors(
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationErrors(
             MethodArgumentNotValidException exception) {
 
         Map<String, String> errors = new HashMap<>();
@@ -103,16 +92,63 @@ public class GlobalExceptionHandler {
         exception.getBindingResult()
                 .getFieldErrors()
                 .forEach(error ->
-                        errors.put(
-                                error.getField(),
-                                error.getDefaultMessage()
-                        )
+                        errors.put(error.getField(), error.getDefaultMessage())
                 );
 
-        return new ApiResponse<>(
-                false,
-                "Validation failed",
-                errors
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse<>(false, "Validation failed", errors));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUnreadableMessage() {
+
+        return error(HttpStatus.BAD_REQUEST, "Invalid request body");
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse<Void>> handleTypeMismatch() {
+
+        return error(HttpStatus.BAD_REQUEST, "Invalid request parameter");
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDatabaseError(
+            DataAccessException exception) {
+
+        log.error("Database error", exception);
+
+        return error(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "A database error occurred. Please try again later."
         );
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(
+            IllegalArgumentException exception) {
+
+        return error(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Void>> handleUnexpected(
+            Exception exception) {
+
+        log.error("Unexpected server error", exception);
+
+        return error(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected error occurred. Please try again later."
+        );
+    }
+
+    private ResponseEntity<ApiResponse<Void>> error(
+            HttpStatus status,
+            String message) {
+
+        return ResponseEntity
+                .status(status)
+                .body(new ApiResponse<>(false, message, null));
     }
 }

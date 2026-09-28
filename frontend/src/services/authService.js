@@ -1,43 +1,19 @@
-const API_URL =
-  "https://smarthire-production-fa7c.up.railway.app/api/auth";
+import { apiRequest } from "./api";
 
-export async function loginUser(
-  email,
-  password
-) {
-  const response = await fetch(
-    `${API_URL}/login`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    }
-  );
+export async function loginUser(email, password) {
+  return apiRequest("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+}
 
-  const text = await response.text();
+export async function registerUser(payload) {
+  return apiRequest("/auth/register", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
 
-  let data = {};
-
-  if (text) {
-    try {
-      data = JSON.parse(text);
-    } catch (error) {
-      throw new Error(
-        "Server returned an invalid response"
-      );
-    }
-  }
-
-  if (!response.ok) {
-    throw new Error(
-      data.message || "Login failed"
-    );
-  }
-
-  return data;
+export async function getCurrentUser() {
+  return apiRequest("/auth/me");
 }

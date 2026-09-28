@@ -6,6 +6,7 @@ import com.mahesh.smarthire.entity.Job;
 import com.mahesh.smarthire.entity.User;
 import com.mahesh.smarthire.enums.ApplicationStatus;
 import com.mahesh.smarthire.enums.JobStatus;
+import com.mahesh.smarthire.enums.UserRole;
 import com.mahesh.smarthire.exception.ApplicationNotFoundException;
 import com.mahesh.smarthire.exception.DuplicateApplicationException;
 import com.mahesh.smarthire.exception.InvalidCredentialsException;
@@ -46,6 +47,11 @@ public class ApplicationService {
                 .findByEmail(candidateEmail)
                 .orElseThrow(InvalidCredentialsException::new);
 
+        if (candidate.getRole() != UserRole.CANDIDATE) {
+            throw new AccessDeniedException(
+                    "Only candidates can apply for jobs");
+        }
+
         Job job = jobRepository
                 .findById(jobId)
                 .orElseThrow(() ->
@@ -56,11 +62,10 @@ public class ApplicationService {
         }
 
         boolean alreadyApplied =
-                applicationRepository
-                        .existsByCandidateIdAndJobId(
-                                candidate.getId(),
-                                job.getId()
-                        );
+                applicationRepository.existsByCandidateIdAndJobId(
+                        candidate.getId(),
+                        job.getId()
+                );
 
         if (alreadyApplied) {
             throw new DuplicateApplicationException();
@@ -173,6 +178,8 @@ public class ApplicationService {
     private ApplicationResponse convertToResponse(
             Application application) {
 
+        Job job = application.getJob();
+
         return new ApplicationResponse(
 
                 application.getId(),
@@ -181,9 +188,11 @@ public class ApplicationService {
                 application.getCandidate().getName(),
                 application.getCandidate().getEmail(),
 
-                application.getJob().getId(),
-                application.getJob().getTitle(),
-                application.getJob().getCompany(),
+                job.getId(),
+                job.getTitle(),
+                job.getCompany(),
+                job.getLocation(),
+                job.getSalary(),
 
                 application.getStatus()
         );
