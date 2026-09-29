@@ -1,52 +1,55 @@
-package com.mahesh.smarthire.entity;
+package com.mahesh.smarthire.dto;
 
 import com.mahesh.smarthire.enums.UserRole;
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
-public class User {
+public class UserProfileResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
-    @Column(unique = true, nullable = false)
     private String email;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private UserRole role;
-
     private String phone;
-
     private String location;
-
-    @Column(columnDefinition = "TEXT")
     private String summary;
-
-    @Column(columnDefinition = "TEXT")
     private String skills;
-
     private String education;
-
     private String experience;
-
+    private boolean hasResume;
     private String resumeFileName;
-
-    private String resumeFilePath;
-
-    private String resumeFileType;
-
     private LocalDateTime resumeUpdatedAt;
 
-    public User() {
+    public UserProfileResponse() {
+    }
+
+    public UserProfileResponse(
+            Long id,
+            String name,
+            String email,
+            UserRole role,
+            String phone,
+            String location,
+            String summary,
+            String skills,
+            String education,
+            String experience,
+            boolean hasResume,
+            String resumeFileName,
+            LocalDateTime resumeUpdatedAt) {
+
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.role = role;
+        this.phone = phone;
+        this.location = location;
+        this.summary = summary;
+        this.skills = skills;
+        this.education = education;
+        this.experience = experience;
+        this.hasResume = hasResume;
+        this.resumeFileName = resumeFileName;
+        this.resumeUpdatedAt = resumeUpdatedAt;
     }
 
     public Long getId() {
@@ -71,14 +74,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public UserRole getRole() {
@@ -137,28 +132,20 @@ public class User {
         this.experience = experience;
     }
 
+    public boolean isHasResume() {
+        return hasResume;
+    }
+
+    public void setHasResume(boolean hasResume) {
+        this.hasResume = hasResume;
+    }
+
     public String getResumeFileName() {
         return resumeFileName;
     }
 
     public void setResumeFileName(String resumeFileName) {
         this.resumeFileName = resumeFileName;
-    }
-
-    public String getResumeFilePath() {
-        return resumeFilePath;
-    }
-
-    public void setResumeFilePath(String resumeFilePath) {
-        this.resumeFilePath = resumeFilePath;
-    }
-
-    public String getResumeFileType() {
-        return resumeFileType;
-    }
-
-    public void setResumeFileType(String resumeFileType) {
-        this.resumeFileType = resumeFileType;
     }
 
     public LocalDateTime getResumeUpdatedAt() {

@@ -18,6 +18,9 @@ public class ApplicationResponse {
 
     private ApplicationStatus status;
 
+    private boolean hasResume;
+    private String resumeFileName;
+
     public ApplicationResponse() {
     }
 
@@ -43,6 +46,34 @@ public class ApplicationResponse {
         this.location = location;
         this.salary = salary;
         this.status = status;
+    }
+
+    public ApplicationResponse(
+            Long id,
+            Long candidateId,
+            String candidateName,
+            String candidateEmail,
+            Long jobId,
+            String jobTitle,
+            String company,
+            String location,
+            String salary,
+            ApplicationStatus status,
+            boolean hasResume,
+            String resumeFileName) {
+
+        this.id = id;
+        this.candidateId = candidateId;
+        this.candidateName = candidateName;
+        this.candidateEmail = candidateEmail;
+        this.jobId = jobId;
+        this.jobTitle = jobTitle;
+        this.company = company;
+        this.location = location;
+        this.salary = salary;
+        this.status = status;
+        this.hasResume = hasResume;
+        this.resumeFileName = resumeFileName;
     }
 
     public Long getId() {
@@ -123,5 +154,21 @@ public class ApplicationResponse {
 
     public void setStatus(ApplicationStatus status) {
         this.status = status;
+    }
+
+    public boolean isHasResume() {
+        return hasResume;
+    }
+
+    public void setHasResume(boolean hasResume) {
+        this.hasResume = hasResume;
+    }
+
+    public String getResumeFileName() {
+        return resumeFileName;
+    }
+
+    public void setResumeFileName(String resumeFileName) {
+        this.resumeFileName = resumeFileName;
     }
 }

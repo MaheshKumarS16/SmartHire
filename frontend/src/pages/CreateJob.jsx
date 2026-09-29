@@ -1,8 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
+import {
+  ArrowLeft,
+  Briefcase,
+  Building2,
+  MapPin,
+  IndianRupee,
+  CheckCircle,
+  AlertCircle
+} from "lucide-react";
 import { createJob } from "../services/recruiterJobService";
-
 import "./CreateJob.css";
 
 function CreateJob() {
@@ -23,64 +30,42 @@ function CreateJob() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setFormData((currentData) => ({
       ...currentData,
       [name]: value,
     }));
-
     setErrors((currentErrors) => ({
       ...currentErrors,
       [name]: "",
     }));
-
     setError("");
   };
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.title.trim()) {
-      newErrors.title = "Job title is required";
-    }
-
-    if (!formData.company.trim()) {
-      newErrors.company = "Company name is required";
-    }
-
-    if (!formData.location.trim()) {
-      newErrors.location = "Location is required";
-    }
-
-    if (!formData.salary.trim()) {
-      newErrors.salary = "Salary is required";
-    }
-
+    if (!formData.title.trim()) newErrors.title = "Job title is required";
+    if (!formData.company.trim()) newErrors.company = "Company name is required";
+    if (!formData.location.trim()) newErrors.location = "Location is required";
+    if (!formData.salary.trim()) newErrors.salary = "Salary information is required";
     if (!formData.description.trim()) {
       newErrors.description = "Job description is required";
     } else if (formData.description.trim().length < 20) {
-      newErrors.description =
-        "Job description must be at least 20 characters";
+      newErrors.description = "Job description must be at least 20 characters";
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     setSuccess("");
     setError("");
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
       setLoading(true);
-
       await createJob({
         title: formData.title.trim(),
         company: formData.company.trim(),
@@ -89,8 +74,7 @@ function CreateJob() {
         description: formData.description.trim(),
       });
 
-      setSuccess("Job created successfully.");
-
+      setSuccess("Job listing published successfully!");
       setFormData({
         title: "",
         company: "",
@@ -101,9 +85,9 @@ function CreateJob() {
 
       setTimeout(() => {
         navigate("/my-jobs");
-      }, 800);
+      }, 900);
     } catch (err) {
-      setError(err.message || "Failed to create job");
+      setError(err.message || "Failed to create job posting");
     } finally {
       setLoading(false);
     }
@@ -112,233 +96,167 @@ function CreateJob() {
   return (
     <main className="page create-job-page">
       <div className="container">
+        {/* Back Link */}
+        <div className="create-job-nav">
+          <Link to="/my-jobs" className="back-link">
+            <ArrowLeft size={16} />
+            <span>Back to My Jobs</span>
+          </Link>
+        </div>
 
-        <section className="create-job-header">
-          <span className="eyebrow">RECRUITER PORTAL</span>
-
-          <h1>Create a New Job</h1>
-
-          <p>
-            Post a new opportunity and find the right candidate for your
-            team.
-          </p>
-        </section>
-
-        {error && (
-          <div className="error-message">
-            {error}
+        {/* Form Container Card */}
+        <div className="create-job-container">
+          <div className="form-card-header">
+            <span className="form-badge-pill">RECRUITER PORTAL</span>
+            <h1 className="form-main-title">Create a New Job Listing</h1>
+            <p className="form-main-subtitle">
+              Publish an opening on SmartHire to reach verified, qualified candidates across tech and operations.
+            </p>
           </div>
-        )}
 
-        {success && (
-          <div className="form-success">
-            ✓ {success}
-          </div>
-        )}
+          {error && (
+            <div className="form-alert alert-error">
+              <AlertCircle size={18} />
+              <span>{error}</span>
+            </div>
+          )}
 
-        <div className="create-job-layout">
+          {success && (
+            <div className="form-alert alert-success">
+              <CheckCircle size={18} />
+              <span>{success}</span>
+            </div>
+          )}
 
-          <section className="create-job-card">
-
-            <form
-              className="create-job-form"
-              onSubmit={handleSubmit}
-            >
-
-              <div className="form-row">
-
-                <div className="form-group">
-                  <label htmlFor="title">
-                    Job Title
-                  </label>
-
+          <form className="create-job-form" onSubmit={handleSubmit} noValidate>
+            <div className="form-grid-row">
+              {/* Job Title */}
+              <div className="form-field-wrap">
+                <label className="field-label" htmlFor="title">
+                  Job Title <span className="req-star">*</span>
+                </label>
+                <div className="input-with-icon">
+                  <Briefcase size={17} className="field-icon" />
                   <input
                     id="title"
                     name="title"
                     type="text"
-                    placeholder="e.g. Java Full Stack Developer"
+                    placeholder="e.g. Senior Frontend Engineer"
                     value={formData.title}
                     onChange={handleChange}
+                    className={`form-text-input ${errors.title ? "has-error" : ""}`}
                   />
-
-                  {errors.title && (
-                    <p className="field-error">
-                      {errors.title}
-                    </p>
-                  )}
                 </div>
+                {errors.title && <span className="field-error-msg">{errors.title}</span>}
+              </div>
 
-                <div className="form-group">
-                  <label htmlFor="company">
-                    Company
-                  </label>
-
+              {/* Company Name */}
+              <div className="form-field-wrap">
+                <label className="field-label" htmlFor="company">
+                  Company Name <span className="req-star">*</span>
+                </label>
+                <div className="input-with-icon">
+                  <Building2 size={17} className="field-icon" />
                   <input
                     id="company"
                     name="company"
                     type="text"
-                    placeholder="e.g. SmartHire Technologies"
+                    placeholder="e.g. Accelera Technologies"
                     value={formData.company}
                     onChange={handleChange}
+                    className={`form-text-input ${errors.company ? "has-error" : ""}`}
                   />
-
-                  {errors.company && (
-                    <p className="field-error">
-                      {errors.company}
-                    </p>
-                  )}
                 </div>
-
+                {errors.company && <span className="field-error-msg">{errors.company}</span>}
               </div>
+            </div>
 
-              <div className="form-row">
-
-                <div className="form-group">
-                  <label htmlFor="location">
-                    Location
-                  </label>
-
+            <div className="form-grid-row">
+              {/* Location */}
+              <div className="form-field-wrap">
+                <label className="field-label" htmlFor="location">
+                  Location <span className="req-star">*</span>
+                </label>
+                <div className="input-with-icon">
+                  <MapPin size={17} className="field-icon" />
                   <input
                     id="location"
                     name="location"
                     type="text"
-                    placeholder="e.g. Bangalore"
+                    placeholder="e.g. Bangalore, India (or Remote)"
                     value={formData.location}
                     onChange={handleChange}
+                    className={`form-text-input ${errors.location ? "has-error" : ""}`}
                   />
-
-                  {errors.location && (
-                    <p className="field-error">
-                      {errors.location}
-                    </p>
-                  )}
                 </div>
+                {errors.location && <span className="field-error-msg">{errors.location}</span>}
+              </div>
 
-                <div className="form-group">
-                  <label htmlFor="salary">
-                    Salary
-                  </label>
-
+              {/* Salary */}
+              <div className="form-field-wrap">
+                <label className="field-label" htmlFor="salary">
+                  Salary / Compensation <span className="req-star">*</span>
+                </label>
+                <div className="input-with-icon">
+                  <IndianRupee size={17} className="field-icon" />
                   <input
                     id="salary"
                     name="salary"
                     type="text"
-                    placeholder="e.g. 6-9 LPA"
+                    placeholder="e.g. ₹12 - 18 LPA"
                     value={formData.salary}
                     onChange={handleChange}
+                    className={`form-text-input ${errors.salary ? "has-error" : ""}`}
                   />
-
-                  {errors.salary && (
-                    <p className="field-error">
-                      {errors.salary}
-                    </p>
-                  )}
                 </div>
-
+                {errors.salary && <span className="field-error-msg">{errors.salary}</span>}
               </div>
-
-              <div className="form-group">
-                <label htmlFor="description">
-                  Job Description
-                </label>
-
-                <textarea
-                  id="description"
-                  name="description"
-                  placeholder="Describe the role, responsibilities, required skills and experience..."
-                  value={formData.description}
-                  onChange={handleChange}
-                  rows="7"
-                />
-
-                {errors.description && (
-                  <p className="field-error">
-                    {errors.description}
-                  </p>
-                )}
-              </div>
-
-              <div className="form-actions">
-
-                <button
-                  type="submit"
-                  className="primary-button"
-                  disabled={loading}
-                >
-                  {loading ? "Creating Job..." : "Create Job"}
-                </button>
-
-                <button
-                  type="button"
-                  className="back-button"
-                  onClick={() => navigate("/my-jobs")}
-                  disabled={loading}
-                >
-                  Cancel
-                </button>
-
-              </div>
-
-            </form>
-
-          </section>
-
-          <aside className="create-job-tips">
-
-            <h2>Posting Tips</h2>
-
-            <p>
-              Create a clear and attractive job posting to reach the right
-              candidates.
-            </p>
-
-            <div className="tip-list">
-
-              <div className="tip-item">
-                <div className="tip-icon">1</div>
-
-                <div>
-                  <h3>Clear job title</h3>
-
-                  <p>
-                    Use a specific title that accurately describes the
-                    position.
-                  </p>
-                </div>
-              </div>
-
-              <div className="tip-item">
-                <div className="tip-icon">2</div>
-
-                <div>
-                  <h3>Detailed description</h3>
-
-                  <p>
-                    Explain the responsibilities, skills and expectations
-                    clearly.
-                  </p>
-                </div>
-              </div>
-
-              <div className="tip-item">
-                <div className="tip-icon">3</div>
-
-                <div>
-                  <h3>Salary information</h3>
-
-                  <p>
-                    Adding a salary range helps candidates understand the
-                    opportunity.
-                  </p>
-                </div>
-              </div>
-
             </div>
 
-          </aside>
+            {/* Job Description */}
+            <div className="form-field-wrap">
+              <div className="field-label-row">
+                <label className="field-label" htmlFor="description">
+                  Job Description &amp; Responsibilities <span className="req-star">*</span>
+                </label>
+                <span className="char-count-text">
+                  {formData.description.length} characters
+                </span>
+              </div>
+              <textarea
+                id="description"
+                name="description"
+                rows={6}
+                placeholder="Describe role responsibilities, key requirements, tech stack, and ideal candidate background..."
+                value={formData.description}
+                onChange={handleChange}
+                className={`form-textarea-input ${errors.description ? "has-error" : ""}`}
+              />
+              {errors.description && (
+                <span className="field-error-msg">{errors.description}</span>
+              )}
+            </div>
 
+            {/* Actions */}
+            <div className="form-actions-row">
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => navigate("/my-jobs")}
+                disabled={loading}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary btn-submit-job"
+                disabled={loading}
+              >
+                {loading ? "Publishing Job..." : "Publish Job Listing"}
+              </button>
+            </div>
+          </form>
         </div>
-
       </div>
     </main>
   );

@@ -1,848 +1,364 @@
-/* =========================================================
-   SmartHire - My Applications Page
-   ========================================================= */
+/* SmartHire My Applications Tracking Styles */
 
 .applications-page {
-  min-height: calc(100vh - 70px);
-
-  width: 100%;
-  box-sizing: border-box;
-
-  padding: 30px 0 55px;
-
   background-color: #f8fafc;
-
-  overflow-x: hidden;
+  padding-bottom: 60px;
 }
 
-
-/* =========================================================
-   Header
-   ========================================================= */
-
-.applications-header {
+.applications-header-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 28px 32px;
   display: flex;
-
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-
-  gap: 25px;
-
-  margin-bottom: 22px;
-
-  min-width: 0;
+  gap: 20px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 
-.applications-header > div:first-child {
-  min-width: 0;
-}
-
-.applications-eyebrow {
-  margin-bottom: 6px;
-
+.app-badge-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #eff6ff;
   color: #2563eb;
-
+  border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 700;
-
-  letter-spacing: 0.08em;
-
-  overflow-wrap: anywhere;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
 }
 
-.applications-header h1 {
-  margin-bottom: 7px;
-
+.app-main-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: #0f172a;
-
-  font-size: 1.9rem;
-  font-weight: 700;
-
-  line-height: 1.25;
-
-  overflow-wrap: anywhere;
-}
-
-.applications-subtitle {
-  color: #64748b;
-
-  font-size: 0.85rem;
-
-  line-height: 1.5;
-
-  overflow-wrap: anywhere;
-}
-
-.applications-header-actions {
-  display: flex;
-
-  gap: 9px;
-
-  flex-shrink: 0;
-}
-
-
-/* =========================================================
-   Candidate Information
-   ========================================================= */
-
-.candidate-info-card {
-  display: flex;
-  align-items: center;
-
-  gap: 13px;
-
-  margin-bottom: 24px;
-
-  padding: 16px 18px;
-
-  box-sizing: border-box;
-
-  background-color: #ffffff;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04);
-
-  min-width: 0;
-}
-
-.candidate-avatar {
-  width: 42px;
-  height: 42px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background-color: #dbeafe;
-
-  color: #2563eb;
-
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.candidate-info-card > div:last-child {
-  display: flex;
-  flex-direction: column;
-
-  gap: 2px;
-
-  min-width: 0;
-}
-
-.candidate-info-card span {
-  color: #64748b;
-
-  font-size: 0.68rem;
-}
-
-.candidate-info-card strong {
-  color: #0f172a;
-
-  font-size: 0.82rem;
-
-  overflow-wrap: anywhere;
-}
-
-.candidate-info-card small {
-  color: #64748b;
-
-  font-size: 0.7rem;
-
-  overflow-wrap: anywhere;
-}
-
-
-/* =========================================================
-   Section Header
-   ========================================================= */
-
-.applications-section {
-  margin-top: 10px;
-
-  min-width: 0;
-}
-
-.applications-section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 15px;
-
-  margin-bottom: 13px;
-
-  min-width: 0;
-}
-
-.applications-section-header > div {
-  min-width: 0;
-}
-
-.applications-section-header h2 {
+  letter-spacing: -0.02em;
   margin-bottom: 4px;
-
-  color: #0f172a;
-
-  font-size: 1.05rem;
-  font-weight: 650;
-
-  overflow-wrap: anywhere;
 }
 
-.applications-section-header p {
+.app-main-desc {
+  font-size: 0.88rem;
   color: #64748b;
-
-  font-size: 0.73rem;
 }
 
-
-/* =========================================================
-   Applications List
-   ========================================================= */
-
-.applications-list {
-  display: flex;
-  flex-direction: column;
-
-  gap: 14px;
-
-  min-width: 0;
-}
-
-
-/* =========================================================
-   Application Card
-   ========================================================= */
-
-.application-card {
-  width: 100%;
-  min-width: 0;
-
-  box-sizing: border-box;
-
-  background-color: #ffffff;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-
-  overflow: hidden;
-
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.application-card:hover {
-  transform: translateY(-2px);
-
-  box-shadow:
-    0 8px 20px rgba(15, 23, 42, 0.07);
-}
-
-
-/* =========================================================
-   Card Top
-   ========================================================= */
-
-.application-card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-
-  gap: 20px;
-
-  padding: 20px;
-
-  min-width: 0;
-}
-
-.application-job-info {
+.header-action-group {
   display: flex;
   align-items: center;
-
-  gap: 13px;
-
-  min-width: 0;
-
-  flex: 1;
+  gap: 12px;
 }
 
-.application-company-icon {
-  width: 48px;
-  height: 48px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 11px;
-
-  background-color: #eff6ff;
-
-  color: #2563eb;
-
-  font-size: 0.95rem;
-  font-weight: 700;
-}
-
-.application-job-info > div:last-child {
-  min-width: 0;
-}
-
-.application-label {
-  margin-bottom: 3px;
-
-  color: #2563eb;
-
-  font-size: 0.62rem;
-  font-weight: 700;
-
-  letter-spacing: 0.07em;
-}
-
-.application-job-info h3 {
-  margin-bottom: 3px;
-
-  color: #0f172a;
-
-  font-size: 1rem;
-  font-weight: 650;
-
-  line-height: 1.4;
-
-  overflow-wrap: anywhere;
-}
-
-.application-company {
-  color: #64748b;
-
-  font-size: 0.75rem;
-
-  overflow-wrap: anywhere;
-}
-
-
-/* =========================================================
-   Status Badges
-   ========================================================= */
-
-.application-status {
+.btn-refresh-apps {
   display: inline-flex;
   align-items: center;
+  gap: 6px;
+}
 
-  flex-shrink: 0;
+/* Tabs */
+.apps-filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
 
-  padding: 6px 11px;
-
+.apps-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 999px;
-
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   font-weight: 600;
-
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
   white-space: nowrap;
 }
 
-.application-status-applied {
-  background-color: #dbeafe;
-
-  color: #1d4ed8;
+.apps-tab-btn:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
 }
 
-.application-status-shortlisted {
-  background-color: #fef3c7;
-
-  color: #b45309;
+.apps-tab-btn.active {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
 }
 
-.application-status-hired {
-  background-color: #dcfce7;
-
-  color: #15803d;
-}
-
-.application-status-rejected {
-  background-color: #fee2e2;
-
-  color: #b91c1c;
-}
-
-
-/* =========================================================
-   Job Details
-   ========================================================= */
-
-.application-job-details {
-  display: grid;
-
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
-
-  gap: 12px;
-
-  padding: 0 20px 20px;
-
-  min-width: 0;
-}
-
-.application-detail {
-  display: flex;
-  align-items: center;
-
-  gap: 10px;
-
-  min-width: 0;
-
-  padding: 12px;
-
-  background-color: #f8fafc;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 9px;
-}
-
-.application-detail-icon {
-  width: 34px;
-  height: 34px;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 8px;
-
-  background-color: #eff6ff;
-
-  color: #2563eb;
-
+.tab-bubble {
+  padding: 2px 7px;
+  border-radius: 999px;
   font-size: 0.7rem;
   font-weight: 700;
+  background-color: #f1f5f9;
+  color: #334155;
 }
 
-.application-detail > div {
+.apps-tab-btn.active .tab-bubble {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* Cards Stack */
+.applications-stack {
   display: flex;
   flex-direction: column;
-
-  gap: 2px;
-
-  min-width: 0;
+  gap: 16px;
 }
 
-.application-detail > div span {
-  color: #64748b;
-
-  font-size: 0.62rem;
+.application-tracking-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: all 0.15s ease;
 }
 
-.application-detail strong {
-  color: #0f172a;
-
-  font-size: 0.73rem;
-  font-weight: 600;
-
-  overflow-wrap: anywhere;
+.application-tracking-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
 }
 
-
-/* =========================================================
-   Card Footer
-   ========================================================= */
-
-.application-card-footer {
+.app-card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  gap: 20px;
-
-  padding: 14px 20px;
-
-  border-top: 1px solid #e2e8f0;
-
-  background-color: #fcfdff;
-
-  min-width: 0;
+  margin-bottom: 20px;
 }
 
-.application-card-footer > div {
+.app-company-info {
   display: flex;
-  flex-direction: column;
-
-  gap: 3px;
-
-  min-width: 0;
-}
-
-.application-card-footer strong {
-  color: #334155;
-
-  font-size: 0.72rem;
-  font-weight: 600;
-
-  overflow-wrap: anywhere;
-}
-
-.application-card-footer span {
-  color: #64748b;
-
-  font-size: 0.67rem;
-
-  overflow-wrap: anywhere;
-}
-
-.application-view-button {
-  flex-shrink: 0;
-
-  color: #2563eb;
-
-  font-size: 0.74rem;
-  font-weight: 600;
-
-  white-space: nowrap;
-
-  transition: color 0.2s ease;
-}
-
-.application-view-button:hover {
-  color: #1d4ed8;
-}
-
-
-/* =========================================================
-   Loading / Error
-   ========================================================= */
-
-.applications-state {
-  padding: 35px 0;
-
-  min-width: 0;
-}
-
-
-/* =========================================================
-   Empty State
-   ========================================================= */
-
-.applications-empty {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-
-  width: 100%;
-  max-width: 560px;
-
-  box-sizing: border-box;
-
-  margin: 35px auto 0;
-
-  padding: 45px 30px;
-
-  text-align: center;
-
-  background-color: #ffffff;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-
-  overflow: hidden;
+  gap: 14px;
 }
 
-.applications-empty-icon {
-  width: 52px;
-  height: 52px;
-
+.app-company-monogram {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 800;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
 
-  margin-bottom: 15px;
-
-  border-radius: 13px;
-
-  background-color: #eff6ff;
-
-  color: #2563eb;
-
-  font-size: 0.9rem;
+.app-job-title {
+  font-size: 1.1rem;
   font-weight: 700;
-}
-
-.applications-empty h2 {
-  margin-bottom: 7px;
-
   color: #0f172a;
-
-  font-size: 1.05rem;
-
-  overflow-wrap: anywhere;
+  margin-bottom: 3px;
 }
 
-.applications-empty p {
-  max-width: 430px;
+.app-job-title a {
+  color: inherit;
+  text-decoration: none;
+}
 
-  margin-bottom: 20px;
+.app-job-title a:hover {
+  color: #2563eb;
+}
 
+.app-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
   color: #64748b;
+  flex-wrap: wrap;
+}
 
+.app-location-text,
+.app-salary-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Stepper Pipeline */
+.application-stepper-wrap {
+  background: #f8fafc;
+  padding: 16px 20px;
+  border-radius: 10px;
+  border: 1px solid #f1f5f9;
+  margin-bottom: 18px;
+}
+
+.stepper-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stepper-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 0.78rem;
-
-  line-height: 1.6;
-
-  overflow-wrap: anywhere;
+  font-weight: 600;
+  color: #94a3b8;
 }
 
+.step-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
 
-/* =========================================================
-   Tablet
-   ========================================================= */
+.step-completed {
+  color: #2563eb;
+}
 
-@media (max-width: 750px) {
+.step-completed .step-circle {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
 
-  .applications-header {
-    align-items: flex-start;
+.step-active {
+  color: #0f172a;
+}
 
+.step-active .step-circle {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.step-hired {
+  color: #16a34a;
+}
+
+.step-hired .step-circle {
+  background-color: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+}
+
+.step-rejected {
+  color: #dc2626;
+}
+
+.step-rejected .step-circle {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+.stepper-line {
+  flex: 1;
+  height: 2px;
+  background-color: #e2e8f0;
+  margin: 0 10px;
+}
+
+/* Footer of Card */
+.app-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 0.82rem;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.msg-hired { color: #166534; font-weight: 600; }
+.msg-shortlisted { color: #b45309; font-weight: 600; }
+.msg-applied { color: #475569; }
+.msg-rejected { color: #b91c1c; }
+
+.btn-view-job-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-view-job-link:hover {
+  text-decoration: underline;
+}
+
+.apps-empty-box {
+  text-align: center;
+  padding: 60px 24px;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.empty-briefcase-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apps-empty-box h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.apps-empty-box p {
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+.apps-loading-box {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .applications-header-card {
     flex-direction: column;
-
-    gap: 16px;
+    align-items: flex-start;
   }
-
-  .applications-header-actions {
-    width: 100%;
+  .app-card-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
-
-  .applications-header-actions .btn {
-    flex: 1;
-  }
-
-  .application-job-details {
-    grid-template-columns: 1fr;
-  }
-
-}
-
-
-/* =========================================================
-   Mobile
-   ========================================================= */
-
-@media (max-width: 520px) {
-
-  .applications-page {
-    padding: 22px 0 40px;
-
-    overflow-x: hidden;
-  }
-
-  .applications-header {
-    width: 100%;
-
-    gap: 15px;
-  }
-
-  .applications-eyebrow {
-    font-size: 0.68rem;
-  }
-
-  .applications-header h1 {
-    font-size: 1.55rem;
-
-    line-height: 1.25;
-  }
-
-  .applications-subtitle {
-    font-size: 0.78rem;
-
-    line-height: 1.5;
-  }
-
-  .applications-header-actions {
-    width: 100%;
-
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
+  .stepper-track {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 8px;
   }
-
-  .applications-header-actions .btn {
-    width: 100%;
-
-    min-width: 0;
-
-    white-space: nowrap;
+  .stepper-line {
+    display: none;
   }
-
-
-  /* Candidate */
-
-  .candidate-info-card {
-    width: 100%;
-
-    padding: 14px;
-
-    gap: 11px;
-  }
-
-  .candidate-avatar {
-    width: 40px;
-    height: 40px;
-  }
-
-
-  /* Section */
-
-  .applications-section {
-    width: 100%;
-  }
-
-  .applications-section-header {
-    align-items: flex-start;
-
-    flex-direction: column;
-
-    gap: 2px;
-  }
-
-
-  /* Application Card */
-
-  .application-card {
-    width: 100%;
-  }
-
-  .application-card-top {
-    flex-direction: column;
-
-    gap: 13px;
-
-    padding: 17px;
-  }
-
-  .application-job-info {
-    width: 100%;
-
-    gap: 11px;
-  }
-
-  .application-company-icon {
-    width: 44px;
-    height: 44px;
-  }
-
-  .application-job-info h3 {
-    font-size: 0.92rem;
-  }
-
-  .application-company {
-    font-size: 0.72rem;
-  }
-
-  .application-card-top .application-status {
-    align-self: flex-start;
-  }
-
-
-  /* Details */
-
-  .application-job-details {
-    grid-template-columns: 1fr;
-
-    padding: 0 17px 17px;
-
-    gap: 9px;
-  }
-
-  .application-detail {
-    width: 100%;
-
-    box-sizing: border-box;
-  }
-
-
-  /* Footer */
-
-  .application-card-footer {
-    align-items: flex-start;
-
-    flex-direction: column;
-
-    gap: 10px;
-
-    padding: 13px 17px;
-  }
-
-  .application-card-footer > div {
-    width: 100%;
-  }
-
-  .application-view-button {
-    align-self: flex-start;
-  }
-
-
-  /* Empty */
-
-  .applications-empty {
-    margin-top: 25px;
-
-    padding: 38px 20px;
-  }
-
-}
-
-
-/* =========================================================
-   Very Small Mobile
-   ========================================================= */
-
-@media (max-width: 380px) {
-
-  .applications-page {
-    padding-top: 18px;
-  }
-
-  .applications-header h1 {
-    font-size: 1.4rem;
-  }
-
-  .applications-subtitle {
-    font-size: 0.75rem;
-  }
-
-  .applications-header-actions {
-    grid-template-columns: 1fr;
-  }
-
-  .candidate-info-card {
-    padding: 12px;
-  }
-
-  .application-card-top {
-    padding: 15px;
-  }
-
-  .application-job-details {
-    padding: 0 15px 15px;
-  }
-
-  .application-card-footer {
-    padding: 12px 15px;
-  }
-
 }

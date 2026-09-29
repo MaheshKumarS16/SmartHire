@@ -16,9 +16,14 @@ import com.mahesh.smarthire.repository.ApplicationRepository;
 import com.mahesh.smarthire.repository.JobRepository;
 import com.mahesh.smarthire.repository.UserRepository;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -151,6 +156,42 @@ public class ApplicationService {
         return convertToResponse(updatedApplication);
     }
 
+    // Recruiter downloads candidate's resume for an application
+    public Resource getApplicantResume(Long applicationId, String recruiterEmail) {
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException(applicationId));
+
+        Job job = application.getJob();
+        if (job.getRecruiter() == null ||
+                !job.getRecruiter().getEmail().equals(recruiterEmail)) {
+            throw new AccessDeniedException(
+                    "You are not authorized to access this applicant's resume"
+            );
+        }
+
+        User candidate = application.getCandidate();
+        if (candidate.getResumeFilePath() == null) {
+            throw new IllegalArgumentException("Candidate has not uploaded a resume");
+        }
+
+        try {
+            Path path = Paths.get(candidate.getResumeFilePath());
+            Resource resource = new UrlResource(path.toUri());
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new RuntimeException("Resume file could not be read on disk");
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Malformed resume file path", e);
+        }
+    }
+
+    public Application getApplicationById(Long applicationId) {
+        return applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ApplicationNotFoundException(applicationId));
+    }
+
     // Verify that a recruiter owns a job
     private Job getOwnedJob(
             Long jobId,
@@ -179,22 +220,22 @@ public class ApplicationService {
             Application application) {
 
         Job job = application.getJob();
+        boolean hasResume = application.getCandidate().getResumeFileName() != null &&
+                !application.getCandidate().getResumeFileName().isEmpty();
 
         return new ApplicationResponse(
-
                 application.getId(),
-
                 application.getCandidate().getId(),
                 application.getCandidate().getName(),
                 application.getCandidate().getEmail(),
-
                 job.getId(),
                 job.getTitle(),
                 job.getCompany(),
                 job.getLocation(),
                 job.getSalary(),
-
-                application.getStatus()
+                application.getStatus(),
+                hasResume,
+                application.getCandidate().getResumeFileName()
         );
     }
 }

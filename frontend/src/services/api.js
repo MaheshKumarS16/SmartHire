@@ -1,5 +1,9 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+const rawUrl =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:8080/api";
+
+const API_BASE_URL = rawUrl.endsWith("/") ? rawUrl.slice(0, -1) : rawUrl;
 
 export { API_BASE_URL };
 
@@ -9,7 +13,7 @@ export async function apiRequest(endpoint, options = {}) {
     ...options.headers,
   };
 
-  if (options.body) {
+  if (options.body && !(options.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
 

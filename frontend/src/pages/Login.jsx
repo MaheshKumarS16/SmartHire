@@ -1,5 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  Briefcase,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  ArrowRight,
+  Sparkles,
+  ShieldCheck
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import "./Login.css";
 
@@ -9,12 +20,12 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     setError("");
 
     if (!email.trim() || !password) {
@@ -24,7 +35,6 @@ function Login() {
 
     try {
       setLoading(true);
-
       const user = await login(email.trim(), password);
 
       if (user?.role === "RECRUITER") {
@@ -40,151 +50,95 @@ function Login() {
   };
 
   return (
-    <main className="login-page">
-      <div className="login-container">
-
-        <section className="login-card">
-
-          <div className="login-brand">
-            <div className="login-logo">S</div>
-
-            <div>
-              <h1>SmartHire</h1>
-              <p>Recruitment Management System</p>
-            </div>
+    <main className="page login-page-root">
+      <div className="login-card-container">
+        {/* Card Header */}
+        <div className="login-header-col">
+          <div className="login-brand-badge">
+            <Briefcase size={20} strokeWidth={2.5} />
           </div>
+          <h1 className="login-welcome-title">Welcome to SmartHire</h1>
+          <p className="login-welcome-sub">
+            Sign in to access your recruitment portal or candidate dashboard.
+          </p>
+        </div>
 
-          <div className="login-header">
-            <p className="login-eyebrow">Welcome back</p>
-
-            <h2>Sign in to your account</h2>
-
-            <p>
-              Access your dashboard and continue your hiring journey.
-            </p>
+        {/* Error Alert */}
+        {error && (
+          <div className="login-alert-error" role="alert">
+            <AlertCircle size={18} className="error-icon" />
+            <span>{error}</span>
           </div>
+        )}
 
-          {error && (
-            <div className="login-error" role="alert">
-              <span className="error-icon">!</span>
-              <span>{error}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="login-form">
-
-            <div className="form-group">
-              <label htmlFor="email">
-                Email Address
-              </label>
-
+        {/* Login Form */}
+        <form onSubmit={handleSubmit} className="login-form-body">
+          <div className="form-field-group">
+            <label htmlFor="email" className="field-lbl">
+              Email Address
+            </label>
+            <div className="input-icon-shell">
+              <Mail size={16} className="input-leading-icon" />
               <input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="name@example.com"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
                 disabled={loading}
+                required
               />
             </div>
+          </div>
 
-            <div className="form-group">
-              <div className="password-label-row">
-                <label htmlFor="password">
-                  Password
-                </label>
-              </div>
-
+          <div className="form-field-group">
+            <div className="field-split-label">
+              <label htmlFor="password" className="field-lbl">
+                Password
+              </label>
+            </div>
+            <div className="input-icon-shell">
+              <Lock size={16} className="input-leading-icon" />
               <input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
                 disabled={loading}
+                required
               />
+              <button
+                type="button"
+                className="pwd-toggle-btn"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex="-1"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
-
-            <button
-              type="submit"
-              className="login-button"
-              disabled={loading}
-            >
-              {loading ? "Signing in..." : "Sign In"}
-            </button>
-          </form>
-
-          <div className="login-divider">
-            <span>New to SmartHire?</span>
           </div>
 
-          <div className="register-prompt">
-            <p>
-              Don't have an account?
-            </p>
+          <button
+            type="submit"
+            className="btn btn-primary btn-submit-auth"
+            disabled={loading}
+          >
+            <span>{loading ? "Signing in..." : "Sign In to Account"}</span>
+            {!loading && <ArrowRight size={16} />}
+          </button>
+        </form>
 
-            <Link
-              to="/register"
-              className="register-link"
-            >
-              Create an account
-            </Link>
-          </div>
-
-          <div className="login-footer">
-            <Link to="/">
-              ← Back to SmartHire
-            </Link>
-          </div>
-
-        </section>
-
-        <section className="login-side">
-
-          <div className="side-content">
-
-            <span className="side-badge">
-              SMART RECRUITMENT
-            </span>
-
-            <h2>
-              Find opportunities.
-              <br />
-              Build careers.
-            </h2>
-
-            <p>
-              SmartHire connects talented candidates with
-              the right opportunities while helping recruiters
-              manage the hiring process efficiently.
-            </p>
-
-            <div className="side-features">
-
-              <div className="side-feature">
-                <span>✓</span>
-                <div>
-                  <strong>For Candidates</strong>
-                  <p>Discover and apply for opportunities.</p>
-                </div>
-              </div>
-
-              <div className="side-feature">
-                <span>✓</span>
-                <div>
-                  <strong>For Recruiters</strong>
-                  <p>Manage jobs and applicants in one place.</p>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-
+        {/* Footer Link */}
+        <div className="login-card-footer">
+          <span>Don&apos;t have an account yet?</span>
+          <Link to="/register" className="auth-switch-link">
+            Create an account
+          </Link>
+        </div>
       </div>
     </main>
   );

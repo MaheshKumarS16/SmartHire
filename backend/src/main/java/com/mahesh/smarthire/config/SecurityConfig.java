@@ -54,6 +54,12 @@ public class SecurityConfig {
                 .toList();
 
         configuration.setAllowedOrigins(origins);
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:[*]",
+                "http://127.0.0.1:[*]",
+                "https://*.vercel.app",
+                "https://*.onrender.com"
+        ));
 
         configuration.setAllowedMethods(List.of(
                 "GET",
@@ -177,6 +183,31 @@ public class SecurityConfig {
                                 HttpMethod.PATCH,
                                 "/api/applications/**"
                         ).hasAuthority("ROLE_RECRUITER")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/applications/*/resume"
+                        ).hasAuthority("ROLE_RECRUITER")
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/profile/resume"
+                        ).hasAuthority("ROLE_CANDIDATE")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/profile/resume"
+                        ).hasAuthority("ROLE_CANDIDATE")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/api/profile/resume"
+                        ).hasAuthority("ROLE_CANDIDATE")
+
+                        .requestMatchers(
+                                "/api/profile",
+                                "/api/profile/**"
+                        ).authenticated()
 
                         .anyRequest().authenticated()
                 )

@@ -1,38 +1,55 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Briefcase,
+  User,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  CheckCircle,
+  ArrowRight,
+  Building2
+} from "lucide-react";
 import { apiRequest } from "../services/api";
 import "./Register.css";
 
 function Register() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const initialRole = searchParams.get("role") === "RECRUITER" ? "RECRUITER" : "CANDIDATE";
 
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "CANDIDATE",
+    role: initialRole,
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     setForm((previous) => ({
       ...previous,
       [name]: value,
     }));
-
     setError("");
     setSuccess("");
   };
 
+  const handleRoleSelect = (selectedRole) => {
+    setForm((prev) => ({ ...prev, role: selectedRole }));
+    setError("");
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     setError("");
     setSuccess("");
 
@@ -61,7 +78,6 @@ function Register() {
 
     try {
       setLoading(true);
-
       await apiRequest("/auth/register", {
         method: "POST",
         body: JSON.stringify({
@@ -72,13 +88,10 @@ function Register() {
         }),
       });
 
-      setSuccess(
-        "Account created successfully. Redirecting to login..."
-      );
-
+      setSuccess("Account created successfully! Redirecting to login...");
       setTimeout(() => {
         navigate("/login");
-      }, 1200);
+      }, 1100);
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.");
     } finally {
@@ -87,235 +100,173 @@ function Register() {
   };
 
   return (
-    <main className="register-page">
-      <div className="register-container">
-
-        {/* Left side */}
-        <section className="register-side">
-          <div className="register-side-content">
-
-            <div className="register-brand">
-              <div className="register-logo">S</div>
-
-              <div>
-                <h1>SmartHire</h1>
-                <p>Recruitment Management System</p>
-              </div>
-            </div>
-
-            <div className="register-side-text">
-              <span className="register-badge">
-                SMART RECRUITMENT
-              </span>
-
-              <h2>
-                Build your next
-                <br />
-                career move.
-              </h2>
-
-              <p>
-                Join SmartHire to discover opportunities,
-                connect with recruiters, and manage your
-                career journey from one place.
-              </p>
-            </div>
-
-            <div className="register-features">
-
-              <div className="register-feature">
-                <span>✓</span>
-
-                <div>
-                  <strong>Discover Opportunities</strong>
-                  <p>
-                    Find jobs that match your skills and goals.
-                  </p>
-                </div>
-              </div>
-
-              <div className="register-feature">
-                <span>✓</span>
-
-                <div>
-                  <strong>Easy Applications</strong>
-                  <p>
-                    Apply for jobs and track your applications.
-                  </p>
-                </div>
-              </div>
-
-              <div className="register-feature">
-                <span>✓</span>
-
-                <div>
-                  <strong>Recruiter Tools</strong>
-                  <p>
-                    Post jobs and manage candidates efficiently.
-                  </p>
-                </div>
-              </div>
-
-            </div>
+    <main className="page register-page-root">
+      <div className="register-card-container">
+        {/* Header */}
+        <div className="register-header-col">
+          <div className="register-brand-badge">
+            <Briefcase size={20} strokeWidth={2.5} />
           </div>
-        </section>
+          <h1 className="register-title">Join SmartHire</h1>
+          <p className="register-sub">
+            Create an account to browse jobs or manage company recruitment.
+          </p>
+        </div>
 
-        {/* Right side */}
-        <section className="register-card">
-
-          <div className="register-header">
-            <p className="register-eyebrow">
-              Get started
-            </p>
-
-            <h2>Create your account</h2>
-
-            <p>
-              Register with SmartHire and start your journey.
-            </p>
-          </div>
-
-          {error && (
-            <div className="register-message register-error">
-              <span className="message-icon">!</span>
-              <span>{error}</span>
-            </div>
-          )}
-
-          {success && (
-            <div className="register-message register-success">
-              <span className="message-icon">✓</span>
-              <span>{success}</span>
-            </div>
-          )}
-
-          <form
-            className="register-form"
-            onSubmit={handleSubmit}
+        {/* Role Selector Tabs */}
+        <div className="role-selector-wrap">
+          <button
+            type="button"
+            className={`role-select-card ${form.role === "CANDIDATE" ? "active" : ""}`}
+            onClick={() => handleRoleSelect("CANDIDATE")}
           >
+            <User size={18} />
+            <div className="role-card-text">
+              <strong>Job Seeker</strong>
+              <span>Looking for jobs</span>
+            </div>
+          </button>
 
-            <div className="register-form-group">
-              <label htmlFor="name">
-                Full Name
-              </label>
+          <button
+            type="button"
+            className={`role-select-card ${form.role === "RECRUITER" ? "active" : ""}`}
+            onClick={() => handleRoleSelect("RECRUITER")}
+          >
+            <Building2 size={18} />
+            <div className="role-card-text">
+              <strong>Recruiter</strong>
+              <span>Hiring talent</span>
+            </div>
+          </button>
+        </div>
 
+        {/* Alerts */}
+        {error && (
+          <div className="register-alert-error" role="alert">
+            <AlertCircle size={18} className="error-icon" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="register-alert-success" role="alert">
+            <CheckCircle size={18} className="success-icon" />
+            <span>{success}</span>
+          </div>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="register-form-body">
+          {/* Full Name */}
+          <div className="form-field-group">
+            <label htmlFor="name" className="field-lbl">
+              Full Name
+            </label>
+            <div className="input-icon-shell">
+              <User size={16} className="input-leading-icon" />
               <input
                 id="name"
                 name="name"
                 type="text"
-                placeholder="Enter your full name"
+                placeholder={form.role === "RECRUITER" ? "e.g. Sarah Jenkins (HR Lead)" : "e.g. Mahesh Kumar"}
                 value={form.name}
                 onChange={handleChange}
-                autoComplete="name"
                 disabled={loading}
+                required
               />
             </div>
+          </div>
 
-            <div className="register-form-group">
-              <label htmlFor="email">
-                Email Address
-              </label>
-
+          {/* Email */}
+          <div className="form-field-group">
+            <label htmlFor="email" className="field-lbl">
+              Work / Personal Email
+            </label>
+            <div className="input-icon-shell">
+              <Mail size={16} className="input-leading-icon" />
               <input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="name@example.com"
                 value={form.email}
                 onChange={handleChange}
-                autoComplete="email"
                 disabled={loading}
+                required
               />
             </div>
+          </div>
 
-            <div className="register-form-group">
-              <label htmlFor="role">
-                Account Type
+          {/* Password & Confirm Password in 2-cols */}
+          <div className="register-pwd-grid">
+            <div className="form-field-group">
+              <label htmlFor="password" className="field-lbl">
+                Password
               </label>
-
-              <select
-                id="role"
-                name="role"
-                value={form.role}
-                onChange={handleChange}
-                disabled={loading}
-              >
-                <option value="CANDIDATE">
-                  Candidate
-                </option>
-
-                <option value="RECRUITER">
-                  Recruiter
-                </option>
-              </select>
-            </div>
-
-            <div className="register-form-row">
-
-              <div className="register-form-group">
-                <label htmlFor="password">
-                  Password
-                </label>
-
+              <div className="input-icon-shell">
+                <Lock size={16} className="input-leading-icon" />
                 <input
                   id="password"
                   name="password"
-                  type="password"
-                  placeholder="Minimum 6 characters"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Min 6 characters"
                   value={form.password}
                   onChange={handleChange}
-                  autoComplete="new-password"
                   disabled={loading}
+                  required
                 />
               </div>
+            </div>
 
-              <div className="register-form-group">
-                <label htmlFor="confirmPassword">
-                  Confirm Password
-                </label>
-
+            <div className="form-field-group">
+              <label htmlFor="confirmPassword" className="field-lbl">
+                Confirm Password
+              </label>
+              <div className="input-icon-shell">
+                <Lock size={16} className="input-leading-icon" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type="password"
-                  placeholder="Confirm password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Repeat password"
                   value={form.confirmPassword}
                   onChange={handleChange}
-                  autoComplete="new-password"
                   disabled={loading}
+                  required
                 />
+                <button
+                  type="button"
+                  className="pwd-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex="-1"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </div>
-
             </div>
+          </div>
 
-            <button
-              type="submit"
-              className="register-button"
-              disabled={loading}
-            >
+          <button
+            type="submit"
+            className="btn btn-primary btn-submit-register"
+            disabled={loading}
+          >
+            <span>
               {loading
-                ? "Creating account..."
-                : "Create Account"}
-            </button>
+                ? "Creating Account..."
+                : `Create ${form.role === "RECRUITER" ? "Recruiter" : "Candidate"} Account`}
+            </span>
+            {!loading && <ArrowRight size={16} />}
+          </button>
+        </form>
 
-          </form>
-
-          <div className="register-login">
-            <span>Already have an account?</span>
-
-            <Link to="/login">
-              Sign in
-            </Link>
-          </div>
-
-          <div className="register-footer">
-            <Link to="/">
-              ← Back to SmartHire
-            </Link>
-          </div>
-
-        </section>
-
+        {/* Footer */}
+        <div className="register-card-footer">
+          <span>Already registered with SmartHire?</span>
+          <Link to="/login" className="auth-switch-link">
+            Sign In here
+          </Link>
+        </div>
       </div>
     </main>
   );

@@ -1,555 +1,484 @@
-/* =========================================================
-   SmartHire - Candidate Dashboard
-   ========================================================= */
+/* SmartHire Candidate Dashboard Styles */
 
-.dashboard-page {
-  min-height: calc(100vh - 70px);
-  padding: 32px 0;
+.candidate-dash-page {
   background-color: #f8fafc;
+  padding: 32px 0 60px 0;
 }
 
-
-/* =========================================================
-   Dashboard Header
-   ========================================================= */
-
-.dashboard-header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 32px;
-}
-
-.dashboard-eyebrow {
-  margin-bottom: 8px;
-  color: #2563eb;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.dashboard-title {
-  margin-bottom: 8px;
-  color: #0f172a;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.dashboard-subtitle {
-  max-width: 650px;
-  color: #64748b;
-  font-size: 0.95rem;
-}
-
-.dashboard-header-actions {
-  flex-shrink: 0;
-}
-
-
-/* =========================================================
-   Statistics Cards
-   ========================================================= */
-
-.stats-grid {
+.dash-main-layout {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-  margin-bottom: 28px;
+  grid-template-columns: 240px 1fr;
+  gap: 32px;
+  align-items: start;
 }
 
-.stat-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-
-  padding: 20px;
-
-  background-color: #ffffff;
-
+/* ========================================================
+   Sidebar
+   ======================================================== */
+.dash-sidebar {
+  background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 14px;
-
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  padding: 20px 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
 }
 
-.stat-card:hover {
-  transform: translateY(-2px);
-
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+.dash-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
 }
 
-.stat-icon {
-  width: 46px;
-  height: 46px;
-
+.dash-sidebar-link {
   display: flex;
   align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-
-  border-radius: 12px;
-
-  font-size: 1.1rem;
-  font-weight: 700;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #475569;
+  text-decoration: none;
+  transition: all 0.15s ease;
 }
 
-.stat-icon-primary {
-  background-color: #dbeafe;
-  color: #2563eb;
-}
-
-.stat-icon-blue {
-  background-color: #e0f2fe;
-  color: #0284c7;
-}
-
-.stat-icon-warning {
-  background-color: #fef3c7;
-  color: #d97706;
-}
-
-.stat-icon-success {
-  background-color: #dcfce7;
-  color: #16a34a;
-}
-
-.stat-label {
-  margin-bottom: 2px;
-  color: #64748b;
-  font-size: 0.78rem;
-}
-
-.stat-value {
+.dash-sidebar-link:hover {
+  background-color: #f1f5f9;
   color: #0f172a;
-  font-size: 1.65rem;
-  font-weight: 700;
 }
 
-
-/* =========================================================
-   Dashboard Content
-   ========================================================= */
-
-.dashboard-content-grid {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1.7fr)
-    minmax(300px, 1fr);
-
-  gap: 24px;
-}
-
-.dashboard-panel {
-  background-color: #ffffff;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-
-  overflow: hidden;
-}
-
-
-/* =========================================================
-   Panel Header
-   ========================================================= */
-
-.panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 16px;
-
-  padding: 22px 24px;
-
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.panel-header h2 {
-  margin-bottom: 4px;
-
-  color: #0f172a;
-
-  font-size: 1.05rem;
-  font-weight: 650;
-}
-
-.panel-header p {
-  color: #64748b;
-  font-size: 0.8rem;
-}
-
-.panel-link {
-  flex-shrink: 0;
-
+.dash-sidebar-link.active {
+  background-color: #eff6ff;
   color: #2563eb;
-
-  font-size: 0.85rem;
   font-weight: 600;
 }
 
-.panel-link:hover {
-  color: #1d4ed8;
+.dash-sidebar-footer {
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
 }
 
+.dash-sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: #64748b;
+  font-size: 0.86rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
 
-/* =========================================================
-   Applications
-   ========================================================= */
+.dash-sidebar-logout-btn:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
 
-.application-list {
+/* ========================================================
+   Main Dashboard Area
+   ======================================================== */
+.dash-content-area {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dash-header-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.dash-welcome-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.dash-welcome-sub {
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+.btn-dash-action {
+  padding: 10px 20px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  border-radius: 9px;
+  white-space: nowrap;
+}
+
+/* 4 Metric Cards */
+.dash-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.metric-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.metric-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+}
+
+.metric-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.box-blue .metric-icon-wrap { background: #eff6ff; color: #2563eb; }
+.box-purple .metric-icon-wrap { background: #faf5ff; color: #9333ea; }
+.box-amber .metric-icon-wrap { background: #fffbeb; color: #d97706; }
+.box-emerald .metric-icon-wrap { background: #f0fdf4; color: #16a34a; }
+
+.metric-val-wrap {
   display: flex;
   flex-direction: column;
 }
 
-.application-item {
+.metric-number {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* ========================================================
+   Panel Sections
+   ======================================================== */
+.dash-section-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.panel-header-line {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  gap: 20px;
-
-  padding: 18px 24px;
-
-  border-bottom: 1px solid #e2e8f0;
-
-  transition: background-color 0.2s ease;
+  margin-bottom: 20px;
 }
 
-.application-item:last-child {
-  border-bottom: none;
+.panel-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.application-item:hover {
-  background-color: #f8fafc;
+.panel-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #2563eb;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.application-main {
+.panel-view-all:hover {
+  text-decoration: underline;
+}
+
+/* Table List Rows */
+.dash-list-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dash-app-row {
   display: flex;
   align-items: center;
-
-  gap: 14px;
-
-  min-width: 0;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  transition: all 0.15s ease;
 }
 
-.application-company-icon {
-  width: 42px;
-  height: 42px;
+.dash-app-row:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
 
+.app-row-company-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+  flex: 1;
+}
+
+.dash-monogram {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  flex-shrink: 0;
-
-  border-radius: 10px;
-
-  background-color: #eff6ff;
-  color: #2563eb;
-
-  font-size: 0.9rem;
   font-weight: 700;
+  font-size: 0.88rem;
+  flex-shrink: 0;
 }
 
-.application-info {
-  min-width: 0;
-}
-
-.application-info h3 {
-  margin-bottom: 2px;
-
-  color: #0f172a;
-
-  font-size: 0.9rem;
+.app-job-title {
+  display: block;
+  font-size: 0.92rem;
   font-weight: 600;
+  color: #0f172a;
+}
 
+.app-company-name {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.app-row-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.82rem;
+  color: #64748b;
+  flex: 1;
+}
+
+.app-row-status {
+  margin: 0 16px;
+}
+
+.dash-status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.status-applied {
+  background-color: #eff6ff;
+  color: #1e40af;
+}
+
+.status-shortlisted {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.status-hired {
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.status-rejected {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.btn-dash-view {
+  padding: 6px 14px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #334155;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-dash-view:hover {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+/* Recommended Cards */
+.recommended-jobs-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.recommended-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.15s ease;
+}
+
+.recommended-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+  transform: translateY(-2px);
+}
+
+.rec-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.rec-monogram {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.84rem;
+  flex-shrink: 0;
+}
+
+.rec-titles {
+  overflow: hidden;
+}
+
+.rec-job-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.application-info p {
-  margin-bottom: 2px;
+.rec-company {
+  font-size: 0.76rem;
+  color: #64748b;
+}
 
+.rec-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.rec-pill {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   color: #475569;
-
-  font-size: 0.8rem;
 }
 
-.application-location {
-  color: #64748b;
-  font-size: 0.75rem;
-}
-
-.application-status {
-  flex-shrink: 0;
-}
-
-
-/* =========================================================
-   Empty State
-   ========================================================= */
-
-.dashboard-empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  padding: 48px 24px;
-
-  text-align: center;
-}
-
-.empty-icon {
-  width: 52px;
-  height: 52px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: 16px;
-
-  border-radius: 14px;
-
-  background-color: #eff6ff;
-  color: #2563eb;
-
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.dashboard-empty-state h3 {
-  margin-bottom: 6px;
-
-  color: #0f172a;
-
-  font-size: 1rem;
-}
-
-.dashboard-empty-state p {
-  max-width: 400px;
-
-  margin-bottom: 20px;
-
-  color: #64748b;
-
-  font-size: 0.85rem;
-}
-
-
-/* =========================================================
-   Quick Actions
-   ========================================================= */
-
-.quick-actions {
-  padding: 12px 16px;
-}
-
-.quick-action {
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
-
-  padding: 14px 8px;
-
-  border-bottom: 1px solid #e2e8f0;
-
-  transition: background-color 0.2s ease;
-}
-
-.quick-action:last-child {
-  border-bottom: none;
-}
-
-.quick-action:hover {
-  background-color: #f8fafc;
-}
-
-.quick-action-icon {
-  width: 38px;
-  height: 38px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-
-  border-radius: 9px;
-
-  background-color: #eff6ff;
-  color: #2563eb;
-
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.quick-action h3 {
-  margin-bottom: 1px;
-
-  color: #0f172a;
-
-  font-size: 0.85rem;
+.salary-pill {
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #dcfce7;
   font-weight: 600;
 }
 
-.quick-action p {
-  color: #64748b;
-  font-size: 0.75rem;
-}
-
-.quick-action-arrow {
-  margin-left: auto;
-
-  color: #64748b;
-
-  font-size: 1rem;
-
-  transition:
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.quick-action:hover .quick-action-arrow {
-  color: #2563eb;
-  transform: translateX(3px);
-}
-
-
-/* =========================================================
-   Application Summary
-   ========================================================= */
-
-.application-summary {
-  margin: 16px;
-
-  padding: 18px;
-
-  background-color: #f8fafc;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-}
-
-.application-summary h3 {
-  margin-bottom: 14px;
-
-  color: #0f172a;
-
-  font-size: 0.85rem;
-}
-
-.summary-row {
-  display: flex;
+.rec-view-link {
+  margin-top: auto;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-
-  padding: 8px 0;
-
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.summary-row:last-child {
-  border-bottom: none;
-}
-
-.summary-row span {
-  color: #475569;
+  gap: 4px;
   font-size: 0.8rem;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
 }
 
-.summary-row strong {
-  color: #0f172a;
-  font-size: 0.85rem;
+.rec-view-link:hover {
+  text-decoration: underline;
 }
 
+.dash-empty-box {
+  text-align: center;
+  padding: 36px;
+  color: #64748b;
+  font-size: 0.88rem;
+}
 
-/* =========================================================
-   Responsive Design
-   ========================================================= */
+.dash-loading-wrap {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
 
-@media (max-width: 1000px) {
-
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .dashboard-content-grid {
+/* Responsive */
+@media (max-width: 1024px) {
+  .dash-main-layout {
     grid-template-columns: 1fr;
   }
-
+  .dash-sidebar {
+    min-height: auto;
+  }
+  .dash-sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .dash-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .recommended-jobs-row {
+    grid-template-columns: 1fr;
+  }
 }
-
 
 @media (max-width: 640px) {
-
-  .dashboard-page {
-    padding: 24px 0;
-  }
-
-  .dashboard-header {
-    align-items: stretch;
+  .dash-header-banner {
     flex-direction: column;
-
-    margin-bottom: 24px;
-  }
-
-  .dashboard-title {
-    font-size: 1.65rem;
-  }
-
-  .dashboard-subtitle {
-    font-size: 0.85rem;
-  }
-
-  .dashboard-header-actions {
-    width: 100%;
-  }
-
-  .dashboard-header-actions .btn {
-    width: 100%;
-  }
-
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .stat-card {
-    padding: 16px;
-  }
-
-
-  .panel-header {
-    padding: 18px;
-  }
-
-  .application-item {
     align-items: flex-start;
-    padding: 16px 18px;
   }
-
-  .application-status {
-    margin-top: 2px;
+  .dash-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
-
-  .application-info h3 {
-    max-width: 180px;
+  .dash-app-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
-
 }

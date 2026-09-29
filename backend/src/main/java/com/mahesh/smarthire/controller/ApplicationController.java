@@ -3,10 +3,14 @@ package com.mahesh.smarthire.controller;
 import com.mahesh.smarthire.dto.ApiResponse;
 import com.mahesh.smarthire.dto.ApplicationRequest;
 import com.mahesh.smarthire.dto.ApplicationResponse;
+import com.mahesh.smarthire.entity.Application;
 import com.mahesh.smarthire.enums.ApplicationStatus;
 import com.mahesh.smarthire.service.ApplicationService;
 import jakarta.validation.Valid;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -84,5 +88,21 @@ public class ApplicationController {
                         authentication.getName()
                 )
         );
+    }
+
+    @GetMapping("/{applicationId}/resume")
+    public ResponseEntity<Resource> getApplicantResume(
+            @PathVariable Long applicationId,
+            Authentication authentication) {
+
+        Resource resource = applicationService.getApplicantResume(applicationId, authentication.getName());
+        Application app = applicationService.getApplicationById(applicationId);
+        String fileName = app.getCandidate().getResumeFileName() != null ? app.getCandidate().getResumeFileName() : "resume.pdf";
+        String contentType = app.getCandidate().getResumeFileType() != null ? app.getCandidate().getResumeFileType() : MediaType.APPLICATION_OCTET_STREAM_VALUE;
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                .body(resource);
     }
 }

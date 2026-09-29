@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
@@ -15,6 +16,7 @@ import CreateJob from "./pages/CreateJob";
 import MyJobs from "./pages/MyJobs";
 import EditJob from "./pages/EditJob";
 import Applicants from "./pages/Applicants";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 function AppContent() {
@@ -92,9 +94,20 @@ function AppContent() {
           }
         />
 
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      <Footer />
     </div>
   );
 }
