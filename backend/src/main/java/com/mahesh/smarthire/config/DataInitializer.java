@@ -1,0 +1,333 @@
+package com.mahesh.smarthire.config;
+
+import com.mahesh.smarthire.entity.Job;
+import com.mahesh.smarthire.entity.User;
+import com.mahesh.smarthire.enums.JobStatus;
+import com.mahesh.smarthire.enums.UserRole;
+import com.mahesh.smarthire.repository.JobRepository;
+import com.mahesh.smarthire.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+public class DataInitializer implements CommandLineRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
+
+    private final JobRepository jobRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public DataInitializer(
+            JobRepository jobRepository,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+        this.jobRepository = jobRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public void run(String... args) {
+        try {
+            cleanupCorruptedJobs();
+            seedDemoJobsIfRequired();
+        } catch (Exception e) {
+            log.error("DataInitializer error: {}", e.getMessage(), e);
+        }
+    }
+
+    private void cleanupCorruptedJobs() {
+        List<Job> allJobs = jobRepository.findAll();
+        for (Job job : allJobs) {
+            String desc = job.getDescription() != null ? job.getDescription().toLowerCase() : "";
+            String title = job.getTitle() != null ? job.getTitle().trim() : "";
+            String company = job.getCompany() != null ? job.getCompany().trim() : "";
+
+            // Identify garbled/corrupted test jobs (e.g., lhfwhkrnv or single-word gibberish)
+            if (desc.contains("lhfwhkrnv") || desc.length() < 15 || title.length() < 2 || company.length() < 2) {
+                log.info("Cleaning up corrupted job record ID: {} ({})", job.getId(), title);
+                try {
+                    jobRepository.delete(job);
+                } catch (Exception ex) {
+                    log.warn("Could not delete job ID {}: {}", job.getId(), ex.getMessage());
+                }
+            }
+        }
+    }
+
+    private void seedDemoJobsIfRequired() {
+        long currentCount = jobRepository.count();
+        if (currentCount >= 25) {
+            log.info("Sufficient jobs present in database ({}), skipping demo seeding.", currentCount);
+            return;
+        }
+
+        log.info("Database has {} jobs. Seeding comprehensive 25 professional demo jobs...", currentCount);
+
+        // Ensure demo recruiter exists
+        User recruiter = userRepository.findByEmail("recruiter@smarthire.demo")
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setName("Priya Recruiter");
+                    newUser.setEmail("recruiter@smarthire.demo");
+                    newUser.setPassword(passwordEncoder.encode("Password@123"));
+                    newUser.setRole(UserRole.RECRUITER);
+                    return userRepository.save(newUser);
+                });
+
+        List<Job> demoJobs = new ArrayList<>();
+
+        demoJobs.add(createJob(
+                "Software Engineer",
+                "TechNova Solutions",
+                "Bangalore, Karnataka",
+                "₹8–12 LPA",
+                "We are seeking a Software Engineer to design, build, and maintain core platform microservices.\n\nResponsibilities:\n- Develop robust REST APIs using Java and Spring Boot\n- Collaborate with frontend engineers to integrate user-facing features\n- Optimize database queries and improve system reliability\n- Participate in code reviews and agile sprints\n\nRequirements:\n- 2–4 years of software development experience\n- Proficiency in Java, Spring Boot, and SQL databases\n- Familiarity with Docker, Git, and CI/CD pipelines\n- Strong problem-solving and analytical mindset\n\nSkills: Java, Spring Boot, REST APIs, MySQL, Docker, Git",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Associate Software Engineer",
+                "NextGen Systems",
+                "Chennai, Tamil Nadu",
+                "₹4–7 LPA",
+                "Join NextGen Systems as an Associate Software Engineer to learn, build, and support enterprise applications.\n\nResponsibilities:\n- Assist in developing backend services and web components\n- Write unit tests and maintain technical documentation\n- Troubleshoot bugs and perform minor feature enhancements\n- Work closely with senior mentors across the SDLC\n\nRequirements:\n- 0–1 years of experience or strong academic project foundation\n- Basic knowledge of Java, JavaScript, and relational databases\n- Eagerness to learn new frameworks and best practices\n- Good communication and teamwork abilities\n\nSkills: Core Java, JavaScript, SQL, HTML/CSS, Git",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Java Developer",
+                "CodeCraft Technologies",
+                "Hyderabad, Telangana",
+                "₹6–10 LPA",
+                "Looking for an experienced Java Developer to develop scalable enterprise backend systems and APIs.\n\nResponsibilities:\n- Implement business logic and data persistence layers\n- Design and consume RESTful web services\n- Troubleshoot production issues and enhance throughput\n- Maintain clean, testable, and modular code\n\nRequirements:\n- 2–4 years in Core Java, Spring Framework, and JPA/Hibernate\n- Hands-on experience with MySQL or PostgreSQL\n- Knowledge of unit testing with JUnit and Mockito\n- Solid understanding of OOP principles\n\nSkills: Java, Spring, Hibernate, MySQL, JUnit, Maven",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Spring Boot Developer",
+                "CloudBridge Technologies",
+                "Pune, Maharashtra",
+                "₹8–12 LPA",
+                "CloudBridge Technologies is hiring a Spring Boot Developer to build cloud-ready microservices architectures.\n\nResponsibilities:\n- Build resilient microservices with Spring Boot and Spring Cloud\n- Secure endpoints using Spring Security and JWT authentication\n- Integrate message brokers such as Kafka or RabbitMQ\n- Monitor application health and optimize JVM performance\n\nRequirements:\n- 3–5 years of backend engineering experience\n- Strong mastery of Spring Boot, Spring Data JPA, and Spring Security\n- Experience with containerization (Docker, Kubernetes)\n- Working knowledge of cloud platforms\n\nSkills: Spring Boot, Spring Security, JWT, Docker, Redis, Kafka",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Full Stack Developer",
+                "Vertex Digital",
+                "Bangalore, Karnataka",
+                "₹10–15 LPA",
+                "Vertex Digital is looking for a versatile Full Stack Developer to build end-to-end web applications.\n\nResponsibilities:\n- Develop responsive web interfaces in React and modern CSS\n- Build scalable RESTful backend services using Spring Boot\n- Architect database schemas and ensure data integrity\n- Ensure smooth end-to-end user workflows and performance\n\nRequirements:\n- 3–5 years of full stack web development experience\n- Proficiency in React, JavaScript/TypeScript, Java, and MySQL\n- Experience with REST API design and state management\n- Passion for clean UI and solid backend architecture\n\nSkills: React, Java, Spring Boot, MySQL, REST APIs, TypeScript",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Frontend Developer",
+                "BrightStack Solutions",
+                "Mumbai, Maharashtra",
+                "₹6–10 LPA",
+                "We are seeking a creative Frontend Developer to craft delightful, responsive user interfaces.\n\nResponsibilities:\n- Build reusable React components with clean CSS and micro-animations\n- Ensure seamless responsiveness across desktop, tablet, and mobile\n- Optimize web bundle sizes, asset delivery, and Core Web Vitals\n- Collaborate with UI/UX designers to translate Figma mockups\n\nRequirements:\n- 2–4 years of modern frontend development experience\n- Strong expertise in HTML5, CSS3, JavaScript (ES6+), and React\n- Knowledge of responsive design and cross-browser compatibility\n- Eye for detail and typography\n\nSkills: React, JavaScript, CSS3, HTML5, Vite, Responsive Design",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "React Developer",
+                "InnovateHub",
+                "Coimbatore, Tamil Nadu",
+                "₹5–8 LPA",
+                "InnovateHub is looking for a React Developer to accelerate product feature delivery on our flagship SaaS portal.\n\nResponsibilities:\n- Implement interactive dashboard pages and real-time state management\n- Integrate backend REST APIs and handle error boundaries\n- Write unit and component tests to ensure UI stability\n- Participate in sprint planning and design discussions\n\nRequirements:\n- 1–3 years of specialized React experience\n- Strong grasp of React Hooks, Context API, and React Router\n- Experience with modern styling approaches and CSS modules\n- Familiarity with Git version control\n\nSkills: React, React Router, Hooks, Context API, Tailwind/CSS, REST API",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Backend Developer",
+                "Nexora Technologies",
+                "Noida, Uttar Pradesh",
+                "₹8–12 LPA",
+                "Nexora Technologies is seeking a dedicated Backend Developer to build high-performance data pipelines and APIs.\n\nResponsibilities:\n- Architect database tables and write efficient SQL queries\n- Implement business validations and background job workers\n- Maintain API documentation with OpenAPI / Swagger\n- Ensure high availability, fault tolerance, and security\n\nRequirements:\n- 2–4 years of backend development experience\n- Strong programming skills in Java, Node.js, or Python\n- Good understanding of relational database indexing and transactions\n- Experience with REST and API authentication protocols\n\nSkills: Java, SQL, REST APIs, Security, Spring Boot, Linux",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Node.js Developer",
+                "TechNova Solutions",
+                "Gurgaon, Haryana",
+                "₹8–12 LPA",
+                "Join our core platform engineering team to build fast, asynchronous backend services in Node.js.\n\nResponsibilities:\n- Build RESTful APIs and real-time WebSocket communication channels\n- Manage asynchronous workflows, event loops, and worker queues\n- Integrate caching layers with Redis for low-latency responses\n- Maintain automated tests and CI/CD pipelines\n\nRequirements:\n- 2–4 years in Node.js, Express, and JavaScript/TypeScript\n- Experience with MongoDB and MySQL databases\n- Familiarity with async programming and performance profiling\n- Good understanding of microservices\n\nSkills: Node.js, Express, TypeScript, Redis, MongoDB, MySQL",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Python Developer",
+                "DataSphere Labs",
+                "Bangalore, Karnataka",
+                "₹6–10 LPA",
+                "We are looking for a Python Developer to build data ingestion services, backend APIs, and automation scripts.\n\nResponsibilities:\n- Develop web services using FastAPI or Django\n- Build automated data extraction, transformation, and load (ETL) scripts\n- Integrate third-party APIs and machine learning models\n- Maintain test coverage and documentation\n\nRequirements:\n- 2–4 years of Python development experience\n- Proficiency with FastAPI, Flask, or Django\n- Solid SQL skills and experience with pandas/numpy\n- Good understanding of Git and Linux environments\n\nSkills: Python, FastAPI, Django, PostgreSQL, Pandas, Docker",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Data Analyst",
+                "Insight Analytics",
+                "Hyderabad, Telangana",
+                "₹5–8 LPA",
+                "Insight Analytics is looking for a Data Analyst to transform complex business datasets into actionable insights.\n\nResponsibilities:\n- Analyze key business metrics, user behaviors, and revenue trends\n- Build interactive dashboards and executive reports\n- Cleanse, validate, and structure raw data for analysis\n- Present analytical findings to cross-functional stakeholders\n\nRequirements:\n- 1–3 years of data analytics experience\n- Strong proficiency in SQL and Advanced Excel\n- Experience with Power BI, Tableau, or Google Looker\n- Strong analytical reasoning and problem-solving skills\n\nSkills: SQL, Excel, Power BI, Tableau, Data Visualization, Analytics",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Junior Data Analyst",
+                "Insight Analytics",
+                "Chennai, Tamil Nadu",
+                "₹4–7 LPA",
+                "We are looking for a Junior Data Analyst to support reporting, data validation, and dashboard development.\n\nResponsibilities:\n- Analyze business datasets and maintain weekly KPI trackers\n- Build automated reports and validate data accuracy\n- Prepare data summaries and dashboard charts\n- Communicate findings clearly with team leads\n\nRequirements:\n- 0–1 years of experience or strong internship background\n- Solid SQL fundamentals and Excel proficiency\n- Familiarity with Python or Power BI is a plus\n- Good communication and quantitative mindset\n\nSkills: SQL, Excel, Python, Power BI, Data Cleaning, Reporting",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Business Analyst",
+                "Vertex Digital",
+                "Pune, Maharashtra",
+                "₹6–10 LPA",
+                "Vertex Digital is seeking a Business Analyst to bridge business requirements and technical product delivery.\n\nResponsibilities:\n- Gather and document business requirements, user stories, and workflows\n- Conduct stakeholder interviews and gap analysis\n- Collaborate with engineering teams to prioritize sprint backlogs\n- Perform user acceptance testing (UAT) and process verification\n\nRequirements:\n- 2–4 years as a Business Analyst in tech or IT services\n- Strong skills in requirement gathering, UML diagrams, and JIRA\n- Excellent interpersonal and presentation capabilities\n- Solid understanding of the Agile/Scrum methodology\n\nSkills: Business Analysis, Agile, JIRA, User Stories, UML, SQL",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "SQL Developer",
+                "NextGen Systems",
+                "Mumbai, Maharashtra",
+                "₹5–8 LPA",
+                "NextGen Systems is looking for a SQL Developer to manage, optimize, and maintain complex relational databases.\n\nResponsibilities:\n- Write and optimize complex SQL queries, stored procedures, and triggers\n- Monitor database performance, index usage, and query execution plans\n- Perform database migrations and schema refactoring\n- Ensure data security, backup integrity, and compliance\n\nRequirements:\n- 2–4 years of specialized SQL/RDBMS experience (MySQL, PostgreSQL, Oracle)\n- Deep knowledge of indexing, query tuning, and schema normalization\n- Experience with ETL pipelines and data transformation\n- Strong problem-solving skills\n\nSkills: MySQL, PostgreSQL, Stored Procedures, Query Optimization, ETL",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Power BI Developer",
+                "Insight Analytics",
+                "Delhi, India",
+                "₹6–10 LPA",
+                "Looking for a Power BI Developer to design visually compelling business intelligence dashboards and data models.\n\nResponsibilities:\n- Build interactive Power BI reports and executive dashboards\n- Write DAX queries, calculated columns, and complex measures\n- Model dimensional star/snowflake schemas\n- Integrate multiple data sources including SQL and cloud data lakes\n\nRequirements:\n- 2–4 years of experience with Microsoft Power BI and DAX\n- Strong knowledge of data modeling and Power Query (M)\n- Experience connecting relational SQL databases\n- Excellent visual storytelling and presentation skills\n\nSkills: Power BI, DAX, Power Query, Data Modeling, SQL, BI Reporting",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Data Engineer",
+                "DataSphere Labs",
+                "Bangalore, Karnataka",
+                "₹10–15 LPA",
+                "DataSphere Labs is hiring a Data Engineer to build high-scale data streaming and batch processing pipelines.\n\nResponsibilities:\n- Design scalable ETL/ELT pipelines using Spark, Airflow, and Python\n- Manage data lake and data warehouse architectures\n- Optimize pipeline latency, fault tolerance, and schema evolution\n- Ensure data governance and high data quality standards\n\nRequirements:\n- 3–5 years in data engineering and distributed computing\n- Hands-on expertise with Python, SQL, Apache Spark, and Kafka\n- Experience with cloud data warehouses (Snowflake, BigQuery, or Redshift)\n- Solid grasp of data modeling concepts\n\nSkills: Python, Spark, Airflow, Kafka, SQL, Data Pipelines, AWS",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "QA Engineer",
+                "TechNova Solutions",
+                "Chennai, Tamil Nadu",
+                "₹5–8 LPA",
+                "TechNova Solutions is seeking a QA Engineer to ensure exceptional product quality across all releases.\n\nResponsibilities:\n- Create comprehensive test plans, test cases, and test matrices\n- Execute manual functional, regression, integration, and UI testing\n- Log detailed defects in JIRA and collaborate with developers\n- Validate API responses using Postman and automated collections\n\nRequirements:\n- 2–4 years in software quality assurance\n- Strong understanding of QA methodologies and SDLC/STLC\n- Experience testing REST APIs with Postman\n- Great attention to detail and communication skills\n\nSkills: Manual Testing, Test Planning, Postman, JIRA, Regression Testing",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Automation Test Engineer",
+                "CodeCraft Technologies",
+                "Bangalore, Karnataka",
+                "₹6–10 LPA",
+                "We are looking for an Automation Test Engineer to build and maintain end-to-end test automation frameworks.\n\nResponsibilities:\n- Develop automated UI tests using Selenium / Playwright / Cypress\n- Implement automated API test suites in Java or Python\n- Integrate automated tests into CI/CD build pipelines\n- Track automation test coverage and analyze execution reports\n\nRequirements:\n- 2–4 years in test automation engineering\n- Proficiency in Java or JavaScript with Selenium / Playwright\n- Experience with TestNG/JUnit and CI/CD tools like GitHub Actions/Jenkins\n- Strong debugging and root-cause analysis skills\n\nSkills: Selenium, Playwright, Java, TestNG, API Testing, CI/CD",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "DevOps Engineer",
+                "CloudBridge Technologies",
+                "Hyderabad, Telangana",
+                "₹8–12 LPA",
+                "CloudBridge Technologies is hiring a DevOps Engineer to automate build, deployment, and infrastructure operations.\n\nResponsibilities:\n- Design and maintain CI/CD pipelines using GitHub Actions and Jenkins\n- Manage containerized infrastructure using Docker and Kubernetes\n- Implement Infrastructure as Code (IaC) with Terraform\n- Monitor system performance, logging, and alert notifications\n\nRequirements:\n- 3–5 years of hands-on DevOps and cloud infrastructure experience\n- Strong expertise in Linux, Docker, Kubernetes, and AWS/GCP\n- Proficiency in scripting with Bash or Python\n- Solid understanding of networking and cloud security\n\nSkills: DevOps, Docker, Kubernetes, Terraform, AWS, CI/CD, Linux",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Cloud Engineer",
+                "Nexora Technologies",
+                "Pune, Maharashtra",
+                "₹8–12 LPA",
+                "We are seeking a Cloud Engineer to build and manage resilient, scalable cloud architectures.\n\nResponsibilities:\n- Provision and configure cloud compute, storage, and networking resources\n- Implement automated backup, disaster recovery, and failover mechanisms\n- Optimize cloud resource utilization and monthly infrastructure costs\n- Maintain cloud security policies and IAM roles\n\nRequirements:\n- 2–4 years of cloud engineering experience on AWS, Azure, or GCP\n- Certifications such as AWS Solutions Architect or Azure Administrator\n- Knowledge of VPCs, load balancers, security groups, and cloud storage\n- Experience with Terraform or CloudFormation\n\nSkills: Cloud Engineering, AWS, Azure, Terraform, Networking, Security",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Technical Support Engineer",
+                "BrightStack Solutions",
+                "Coimbatore, Tamil Nadu",
+                "₹4–7 LPA",
+                "BrightStack Solutions is looking for a Technical Support Engineer to provide tier-2 support for our enterprise software.\n\nResponsibilities:\n- Investigate and resolve complex technical inquiries and application incidents\n- Analyze application logs and database queries to identify root causes\n- Escalate unresolved bugs to core engineering teams with clear documentation\n- Maintain knowledge base articles and troubleshooting guides\n\nRequirements:\n- 1–3 years in technical application support or customer engineering\n- Basic knowledge of SQL, REST APIs, and web browser DevTools\n- Strong problem-solving ability and patient communication\n- Willingness to support customer SLAs\n\nSkills: Technical Support, SQL, Troubleshooting, REST APIs, Customer Service",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Cybersecurity Analyst",
+                "Vertex Digital",
+                "Noida, Uttar Pradesh",
+                "₹8–12 LPA",
+                "Vertex Digital is hiring a Cybersecurity Analyst to protect critical infrastructure, data, and applications.\n\nResponsibilities:\n- Conduct vulnerability assessments, security audits, and penetration tests\n- Monitor security alerts and incident response channels\n- Ensure compliance with industry standards (ISO 27001, SOC 2, GDPR)\n- Champion secure coding practices and developer security training\n\nRequirements:\n- 2–4 years in cybersecurity or information security\n- Knowledge of OWASP Top 10, network protocols, and firewalls\n- Experience with security scanning tools and SIEM systems\n- Security certifications (CEH, CompTIA Security+, CISSP) preferred\n\nSkills: Cybersecurity, OWASP, Vulnerability Assessment, Network Security, SIEM",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "UI/UX Designer",
+                "InnovateHub",
+                "Remote",
+                "₹6–10 LPA",
+                "InnovateHub is looking for a talented UI/UX Designer to craft intuitive, modern user interfaces and experiences.\n\nResponsibilities:\n- Design user journeys, wireframes, high-fidelity mockups, and interactive prototypes in Figma\n- Maintain and expand our comprehensive design system and component library\n- Conduct user research, usability testing, and heuristic evaluations\n- Work closely with frontend developers during design handoff and QA\n\nRequirements:\n- 2–4 years of product or UI/UX design experience\n- Strong portfolio demonstrating mobile and web application design\n- Mastery of Figma, Auto Layout, Components, and Prototyping\n- Strong understanding of usability principles and typography\n\nSkills: UI/UX Design, Figma, Design Systems, Wireframing, Prototyping, Usability",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Product Analyst",
+                "TechNova Solutions",
+                "Bangalore, Karnataka",
+                "₹6–10 LPA",
+                "Join TechNova Solutions as a Product Analyst to drive product experimentation, feature adoption, and roadmap decisions.\n\nResponsibilities:\n- Define product tracking events and monitor conversion funnels\n- Design and evaluate A/B experiments for new feature rollouts\n- Translate customer behavioral data into actionable product requirements\n- Collaborate with product managers and engineers on sprint goals\n\nRequirements:\n- 2–4 years in product analytics or digital product operations\n- Proficiency in SQL and analytics tools (Mixpanel, Amplitude, Google Analytics)\n- Strong statistical understanding and experiment design skills\n- Excellent written and verbal communication\n\nSkills: Product Analytics, SQL, A/B Testing, Mixpanel, User Funnels, KPIs",
+                recruiter
+        ));
+
+        demoJobs.add(createJob(
+                "Graduate Engineer Trainee",
+                "NextGen Systems",
+                "Chennai, Tamil Nadu",
+                "₹4–7 LPA",
+                "NextGen Systems invites recent graduates to join our flagship Graduate Engineer Trainee (GET) program.\n\nResponsibilities:\n- Participate in structured technology training in Java, Web, and Cloud\n- Contribute to real-world software modules under mentorship\n- Learn agile software development practices, git workflows, and code hygiene\n- Complete milestone projects and collaborate with senior engineers\n\nRequirements:\n- B.E. / B.Tech / MCA in Computer Science, IT, or related technical disciplines\n- Foundational knowledge of Data Structures, Algorithms, and OOP concepts\n- Strong enthusiasm to learn and grow in a fast-paced environment\n- Good problem-solving mindset and communication skills\n\nSkills: Java, Data Structures, OOP, SQL, Problem Solving, Learning Agility",
+                recruiter
+        ));
+
+        jobRepository.saveAll(demoJobs);
+        log.info("Successfully seeded {} clean demo jobs into database.", demoJobs.size());
+    }
+
+    private Job createJob(
+            String title,
+            String company,
+            String location,
+            String salary,
+            String description,
+            User recruiter) {
+        Job job = new Job();
+        job.setTitle(title);
+        job.setCompany(company);
+        job.setLocation(location);
+        job.setSalary(salary);
+        job.setDescription(description);
+        job.setStatus(JobStatus.OPEN);
+        job.setRecruiter(recruiter);
+        return job;
+    }
+}
