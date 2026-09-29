@@ -64,5 +64,17 @@ export function AuthProvider({ children }) {
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    // Return safe defaults when context is not available (e.g., during HMR)
+    return {
+      token: null,
+      user: null,
+      isAuthenticated: false,
+      login: async () => {},
+      register: async () => {},
+      logout: () => {},
+    };
+  }
+  return ctx;
 }

@@ -45,6 +45,8 @@ public class DataInitializer implements CommandLineRunner {
 
     private void cleanupCorruptedJobs() {
         List<Job> allJobs = jobRepository.findAll();
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        
         for (Job job : allJobs) {
             String desc = job.getDescription() != null ? job.getDescription().toLowerCase() : "";
             String title = job.getTitle() != null ? job.getTitle().trim() : "";
@@ -65,6 +67,16 @@ public class DataInitializer implements CommandLineRunner {
                 // Standardize salary formatting
                 job.setSalary("₹12–18 LPA");
                 jobRepository.save(job);
+            }
+        }
+        
+        // Remove duplicate jobs (same title + company), keep earliest ID
+        allJobs = jobRepository.findAll();
+        for (Job job : allJobs) {
+            String key = (job.getTitle() + "|||" + job.getCompany()).toLowerCase();
+            if (!seen.add(key)) {
+                log.info("Removing duplicate job ID: {} ({} at {})", job.getId(), job.getTitle(), job.getCompany());
+                jobRepository.delete(job);
             }
         }
     }
